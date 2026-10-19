@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WorkHub</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3">
+            <div class="container">
+                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">WorkHub</a>
+                <div class="navbar-nav flex-row flex-wrap gap-3">
+                    <a class="nav-link" asp-controller="Espacios" asp-action="Index">Espacios</a>
+                    <a class="nav-link" asp-controller="Equipamientos" asp-action="Index">Equipamiento</a>
+                    <a class="nav-link" asp-controller="Reservas" asp-action="Index">Reservas</a>
+                    <a class="nav-link" asp-controller="Pagos" asp-action="Index">Pagos</a>
+                    <a class="nav-link" asp-controller="Reportes" asp-action="Index">Reportes</a>
+                    <a class="nav-link" asp-controller="Cuenta" asp-action="Index">Cuenta</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="container py-3">
+        @RenderBody()
+    </main>
+    <footer class="border-top text-muted py-3 mt-4">
+        <div class="container">WorkHub · Gestión de espacios de trabajo</div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

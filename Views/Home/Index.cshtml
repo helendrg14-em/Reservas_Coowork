@@ -1,0 +1,18 @@
+@{
+    ViewData["Title"] = "Inicio";
+}
+
+<section class="py-4">
+    <h1>WorkHub</h1>
+    <p class="lead">Sistema de reservas de espacios de trabajo y recursos tecnológicos.</p>
+    <p>Selecciona un módulo para comenzar. Cada sección tiene su responsable asignado y está preparada para incorporar sus operaciones.</p>
+</section>
+
+<div class="row g-3">
+    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Cuenta" asp-action="Index"><h2 class="h5">Usuarios</h2><p class="mb-0">Helen · Login, registro y autenticación</p></a></div>
+    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Espacios" asp-action="Index"><h2 class="h5">Espacios</h2><p class="mb-0">Dellien · CRUD y filtros</p></a></div>
+    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Equipamientos" asp-action="Index"><h2 class="h5">Equipamiento</h2><p class="mb-0">Miguel · CRUD y relación «incluye»</p></a></div>
+    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Reservas" asp-action="Index"><h2 class="h5">Reservas</h2><p class="mb-0">Matías · Núcleo de reservas</p></a></div>
+    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Pagos" asp-action="Index"><h2 class="h5">Pagos</h2><p class="mb-0">Jorge · Pagos</p></a></div>
+    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Reportes" asp-action="Index"><h2 class="h5">Reportes</h2><p class="mb-0">Jorge · Informes del sistema</p></a></div>
+</div>
