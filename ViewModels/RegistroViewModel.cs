@@ -5,7 +5,7 @@ namespace Workhub.ViewModels;
 public class RegistroViewModel
 {
     [Required(ErrorMessage = "El nombre completo es obligatorio.")]
-    [StringLength(100, MinimumLength = 3)]
+    [StringLength(100, MinimumLength = 3, ErrorMessage = "El nombre debe tener entre 3 y 100 caracteres.")]
     [Display(Name = "Nombre completo")]
     public string Nombre { get; set; } = string.Empty;
 
@@ -18,6 +18,7 @@ public class RegistroViewModel
     [Required(ErrorMessage = "El teléfono es obligatorio.")]
     [Phone(ErrorMessage = "Ingrese un teléfono válido.")]
     [StringLength(20)]
+    [Display(Name = "Teléfono")]
     public string Telefono { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "La contraseña es obligatoria.")]
