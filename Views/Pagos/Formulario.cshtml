@@ -1,0 +1,62 @@
+@model PagoForm
+@{ ViewData["Title"] = Model.Id == 0 ? "Registrar pago" : "Editar comprobante"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">ADMINISTRACIÓN</p>
+<h1>@ViewData["Title"]</h1>
+</div>
+</div>
+<form asp-action="@(Model.Id == 0 ? "Crear" : "Editar")" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data" class="panel form-card">
+<div asp-validation-summary="All">
+</div>
+@if(Model.Id == 0){<div class="field">
+<label asp-for="IdReserva">
+</label>
+<select asp-for="IdReserva" asp-items="Model.Reservas">
+<option value="0">Selecciona una reserva pendiente</option>
+</select>
+<span asp-validation-for="IdReserva">
+</span>
+</div>}else{<input asp-for="IdReserva" type="hidden" />}
+<div class="form-grid">
+<div class="field">
+<label asp-for="MetodoPago">
+</label>
+<select asp-for="MetodoPago" asp-items="Html.GetEnumSelectList<MetodoPago>()">
+</select>
+<span asp-validation-for="MetodoPago">
+</span>
+</div>
+<div class="field">
+<label asp-for="CodigoTransaccion">
+</label>
+<input asp-for="CodigoTransaccion" placeholder="Ej.: 0045821937 (opcional)" />
+<span asp-validation-for="CodigoTransaccion">
+</span>
+</div>
+</div>
+<div class="field">
+<label asp-for="Archivo">
+</label>
+<input asp-for="Archivo" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" />
+<span asp-validation-for="Archivo">
+</span>
+@if (Model.TieneComprobante)
+{
+    <p class="help">Ya hay un comprobante adjunto (<a asp-action="Comprobante" asp-route-id="@Model.Id" target="_blank" rel="noopener">ver archivo</a>). Si subes otro, lo reemplaza.</p>
+}
+</div>
+<div class="intro-note">
+<strong>¿Qué va en cada campo?</strong>
+<ul>
+<li><strong>QR o transferencia:</strong> copia el N° de operación o código de verificación que aparece en el comprobante del banco y adjunta la captura.</li>
+<li><strong>Tarjeta:</strong> el N° de autorización del voucher, y opcionalmente su foto.</li>
+<li><strong>Efectivo:</strong> puedes dejar el código vacío; el sistema genera una referencia interna (WH-…). Si entregaste un recibo, adjunta su foto.</li>
+</ul>
+Registra el pago después de verificar que fue recibido. El monto corresponde al total de la reserva; este formulario no procesa cobros. Archivos JPG, PNG, WEBP o PDF de hasta 5 MB.
+</div>
+<div class="form-actions">
+<button type="submit">Guardar comprobante</button>
+<a asp-action="Index" class="button ghost">Volver</a>
+</div>
+</form>

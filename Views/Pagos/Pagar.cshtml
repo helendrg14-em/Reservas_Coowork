@@ -1,0 +1,37 @@
+@model PagoClienteForm
+@{ ViewData["Title"] = "Pagar reserva"; var r = Model.Reserva; }
+<a class="back-link" asp-controller="Reservas" asp-action="Detalles" asp-route-id="@r.IdReserva">← Volver a mi reserva</a>
+<div class="page-head"><div><p class="eyebrow">EL ÚLTIMO PASO</p><h1>Confirma tu espacio.</h1><p>Revisa tu reserva y elige cómo pagar.</p></div></div>
+<ol class="steps"><li class="done">1. Espacio y horario</li><li class="current">2. Pago</li><li>3. Confirmación</li></ol>
+<div class="checkout-grid"><section class="panel"><h2>Método de pago</h2><div asp-validation-summary="All"></div>
+@if(!Presentacion.PuedePagar(r))
+{
+    <div class="alert error">Esta reserva no puede pagarse. Su horario ya comenzó, está cerrada o ya tiene un pago.</div>
+    <a asp-controller="Reservas" asp-action="Editar" asp-route-id="@r.IdReserva" class="button ghost">Revisar horario</a>
+}
+else if(!Model.SimulacionHabilitada)
+{
+    <p>Coordina el pago con recepción e indica el folio <strong>@r.Folio</strong>. Un administrador registrará el comprobante recibido.</p><p class="help">La confirmación en línea no está habilitada.</p>
+}
+else
+{
+    <p class="help">Confirmación simulada: no se procesa ningún cobro bancario.</p>
+    <form method="post" enctype="multipart/form-data" asp-action="Pagar" asp-route-id="@r.IdReserva">
+        <fieldset class="payment-methods"><legend>Selecciona un método</legend>
+        @foreach(var metodo in Enum.GetValues<MetodoPago>())
+        {
+            <label class="method-option" for="metodo-@((int)metodo)"><input type="radio" asp-for="MetodoPago" id="metodo-@((int)metodo)" value="@metodo" /><span><strong>@metodo</strong><small>@(metodo == MetodoPago.Efectivo ? "Pago en recepción" : "Registro del método elegido")</small></span></label>
+        }
+        </fieldset><span asp-validation-for="MetodoPago"></span>
+        <div class="receipt-upload">
+            <h3>Comprobante del pago</h3>
+            <p class="help">Puedes adjuntar un comprobante y su número de operación como referencia. Un QR para cobrar no acredita que el pago haya sido recibido. Los campos son opcionales; esta confirmación no verifica operaciones bancarias.</p>
+            <div class="field"><label asp-for="CodigoTransaccion"></label><input asp-for="CodigoTransaccion" placeholder="Ej.: 0045821937" autocomplete="off" /><span asp-validation-for="CodigoTransaccion"></span></div>
+            <div class="field"><label asp-for="Archivo"></label><input asp-for="Archivo" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" /><span asp-validation-for="Archivo"></span><p class="help">JPG, PNG, WEBP o PDF de hasta 5 MB.</p></div>
+        </div>
+        <label class="check confirmation-check"><input asp-for="ConfirmarSimulacion" /><span>Confirmo el registro por <strong>Bs @r.CostoTotal.ToString("N2")</strong>.</span></label><span asp-validation-for="ConfirmarSimulacion"></span>
+        <button type="submit" class="button full pay-button">Confirmar reserva · Bs @r.CostoTotal.ToString("N2")</button>
+        <a class="later-link" asp-action="Index">Pagar más tarde</a>
+    </form>
+}
+</section><aside class="panel order-summary"><img src="@Presentacion.Foto(r.Espacio)" alt="Fotografía referencial del espacio" /><p class="eyebrow">RESUMEN DE TU RESERVA</p><h2>@r.Espacio.Nombre</h2><dl class="receipt-lines"><div><dt>Inicio</dt><dd>@r.FechaInicio.ToString("dd/MM/yyyy HH:mm")</dd></div><div><dt>Fin</dt><dd>@r.FechaFin.ToString("dd/MM/yyyy HH:mm")</dd></div><div><dt>Duración</dt><dd>@r.HorasReservadas.ToString("N2") horas</dd></div><div><dt>Equipos adicionales</dt><dd>@r.ReservaEquipamientos.Sum(e => e.Cantidad)</dd></div></dl><div class="receipt-total"><span>Total a pagar</span><strong>Bs @r.CostoTotal.ToString("N2")</strong></div><small class="folio">@r.Folio</small></aside></div>

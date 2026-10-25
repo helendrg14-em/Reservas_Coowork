@@ -1,0 +1,55 @@
+@model Pago
+@{ ViewData["Title"] = "Detalle de pago"; }
+@if(Model.Estado == EstadoPago.Aprobado)
+{
+    <div class="payment-success"><span>✓</span><div><h2>Pago aprobado.</h2><p>Tu reserva está @Model.Reserva.Estado.ToString().ToLowerInvariant(). El comprobante está guardado.</p></div></div>
+}
+<div class="page-head">
+<div>
+<p class="eyebrow">COMPROBANTE</p>
+<h1>Comprobante de pago</h1>
+<p class="folio">@Model.CodigoTransaccion</p>
+<p>@Model.Reserva.Usuario.Nombre</p>
+</div>
+<button type="button" class="print-button" data-print>Imprimir</button>
+</div>
+<div class="panel">
+<dl class="detail-grid">
+<div>
+<dt>Reserva</dt>
+<dd>@Model.Reserva.Folio</dd>
+</div>
+<div>
+<dt>Método de pago</dt>
+<dd>@Model.MetodoPago</dd>
+</div>
+<div>
+<dt>Fecha de pago</dt>
+<dd>@Model.FechaPago.ToString("dd/MM/yyyy HH:mm")</dd>
+</div>
+<div>
+<dt>Estado</dt>
+<dd>
+<span class="badge @Model.Estado">@Model.Estado</span>
+</dd>
+</div>
+<div>
+<dt>Monto</dt>
+<dd>
+<strong>Bs @Model.Monto.ToString("N2")</strong>
+</dd>
+</div>
+<div>
+<dt>Comprobante adjunto</dt>
+<dd>@if (Model.Comprobante is null) { <span class="help">Sin archivo</span> }
+else { <a asp-action="Comprobante" asp-route-id="@Model.IdPago" target="_blank" rel="noopener">Ver archivo ↗</a> }</dd>
+</div>
+</dl>
+@if (Model.Comprobante is not null && !Model.Comprobante.EndsWith(".pdf"))
+{
+    <img class="receipt-preview" src="@Url.Action("Comprobante", new { id = Model.IdPago })" alt="Comprobante de pago adjunto" loading="lazy" />
+}
+<div class="form-actions">
+<a asp-action="Index" class="button ghost">Volver</a>
+<a asp-controller="Reservas" asp-action="Detalles" asp-route-id="@Model.IdReserva">Ver reserva</a>@if(User.IsInRole("Administrador") && Model.Estado == EstadoPago.Aprobado){<a asp-action="Editar" asp-route-id="@Model.IdPago">Editar comprobante</a>@if(Model.Reserva.Estado != EstadoReserva.Completada){<a asp-action="Reembolsar" asp-route-id="@Model.IdPago">Registrar reembolso</a>}}</div>
+</div>

@@ -1,6 +1,30 @@
-@{
-    ViewData["Title"] = "Pagos";
+@model PagosIndexVm
+@{ ViewData["Title"] = "Pagos"; var admin = User.IsInRole("Administrador"); var vigentes = Model.PorPagar; var vencidas = Model.Vencidas; }
+<div class="page-head"><div><p class="eyebrow">@(admin ? "CONTROL DE PAGOS" : "TUS RESERVAS, AL DÍA")</p><h1>@(admin ? "Pagos y comprobantes" : "Mis pagos")</h1><p>Completa tus reservas pendientes y consulta los pagos realizados.</p></div>@if (admin) { <a asp-action="Crear" class="button">+ Registrar pago</a> }</div>
+<div class="stats payment-stats"><div class="stat"><p>Pendientes de pago</p><strong>@Model.PaginacionPendientes.TotalRegistros</strong><small>Reservas que puedes confirmar</small></div><div class="stat"><p>Total pendiente</p><strong>Bs @Model.MontoPendiente.ToString("N2")</strong><small>No incluye reservas vencidas</small></div><div class="stat"><p>Comprobantes</p><strong>@Model.PaginacionHistorial.TotalRegistros</strong><small>Pagos registrados</small></div></div>
+<form method="get" class="filters"><div class="field"><label for="buscar">Buscar reserva o comprobante</label><input id="buscar" name="buscar" value="@Model.Buscar" placeholder="Folio, espacio o referencia del pago" /></div><button type="submit">Buscar</button><a asp-action="Index" class="button ghost">Limpiar</a></form>
+<div class="section-head" id="pendientes"><h2>Pendientes de pago <span class="count-pill">@Model.PaginacionPendientes.TotalRegistros</span></h2></div>
+<div class="booking-list">
+@foreach (var r in vigentes)
+{
+    <article class="payment-card"><img src="@Presentacion.Foto(r.Espacio)" alt="" loading="lazy" /><div class="booking-info"><span class="badge Pendiente">Pendiente de pago</span><h3>@r.Espacio.Nombre</h3><p>@r.FechaInicio.ToString("dd MMM yyyy · HH:mm") — @r.FechaFin.ToString("HH:mm")</p>@if(admin){<p>@r.Usuario.Nombre</p>}<small class="folio">@r.Folio</small></div><div class="booking-total"><strong>Bs @r.CostoTotal.ToString("N2")</strong>
+    @if (admin) { <a class="button" asp-action="Crear" asp-route-reservaId="@r.IdReserva">Registrar pago</a> }
+    else { <a class="button" asp-action="Pagar" asp-route-id="@r.IdReserva">@(Model.PagoClienteHabilitado ? "Pagar ahora →" : "Ver cómo pagar →")</a> }
+    <a asp-controller="Reservas" asp-action="Detalles" asp-route-id="@r.IdReserva">Ver reserva</a></div></article>
 }
-<h1>Pagos</h1>
-<p>Base para registrar y consultar los pagos asociados a las reservas.</p>
-<p class="text-muted">Responsable: Jorge</p>
+@if(vigentes.Count == 0){<div class="empty panel"><span class="empty-symbol">✓</span><h3>No tienes pagos pendientes.</h3><p>Las reservas nuevas aparecerán aquí hasta que completes su pago.</p><a asp-controller="Espacios" asp-action="Index">Buscar un espacio →</a></div>}
+</div>
+@if (vigentes.Count > 0) { <partial name="_Paginacion" model="Model.PaginacionPendientes" /> }
+@if(vencidas.Count > 0)
+{
+    <div class="section-head" id="vencidas"><h2>Reservas vencidas sin pago <span class="count-pill">@Model.PaginacionVencidas.TotalRegistros</span></h2></div>
+    <p class="help">El horario de inicio ya pasó. Reprograma la reserva para poder pagarla o cancélala desde sus detalles.</p>
+    @foreach(var r in vencidas){<div class="expired-row"><div><strong>@r.Espacio.Nombre</strong><p>@r.FechaInicio.ToString("dd/MM/yyyy HH:mm") · Bs @r.CostoTotal.ToString("N2")</p><small class="folio">@r.Folio</small></div><span class="badge Vencida">Vencida</span><a class="button ghost" asp-controller="Reservas" asp-action="Editar" asp-route-id="@r.IdReserva">Reprogramar</a></div>}
+    <partial name="_Paginacion" model="Model.PaginacionVencidas" />
+}
+<div class="section-head" id="historial"><h2>Historial de pagos</h2></div>
+<div class="table-wrap"><table><thead><tr><th>Comprobante / reserva</th>@if(admin){<th>Cliente</th>}<th>Fecha / método</th><th>Estado</th><th class="numeric">Monto</th><th></th></tr></thead><tbody>
+@foreach(var p in Model.Historial){<tr><td><strong class="folio">@p.CodigoTransaccion</strong><small class="folio">@p.Reserva.Folio</small></td>@if(admin){<td>@p.Reserva.Usuario.Nombre</td>}<td class="nowrap">@p.FechaPago.ToString("dd/MM/yyyy HH:mm")<small>@p.MetodoPago</small></td><td><span class="badge @p.Estado">@p.Estado</span></td><td class="numeric nowrap">Bs @p.Monto.ToString("N2")</td><td><a class="nowrap" asp-action="Detalles" asp-route-id="@p.IdPago">Ver comprobante →</a>@if (p.Comprobante is not null) { <small>📎 Archivo adjunto</small> }</td></tr>}
+@if(Model.Historial.Count == 0){<tr><td colspan="6" class="empty">Aún no hay comprobantes. Cuando pagues una reserva, aparecerá aquí.</td></tr>}
+</tbody></table></div>
+<partial name="_Paginacion" model="Model.PaginacionHistorial" />

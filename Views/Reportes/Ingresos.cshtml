@@ -1,0 +1,98 @@
+@model ReporteIngresosVm
+@{ ViewData["Title"] = "Ingresos por período"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">REPORTE 02</p>
+<h1>Ingresos por período</h1>
+<p>Fecha del pago: @Model.Filtro.Desde.ToString("dd/MM/yyyy") – @Model.Filtro.Hasta.ToString("dd/MM/yyyy") · @(Model.Filtro.Metodo?.ToString() ?? "Todos los métodos")</p>
+</div>
+<button type="button" class="print-button" data-print>Imprimir reporte</button>
+</div>
+<div asp-validation-summary="All">
+</div>
+<form method="get" class="filters">
+<div class="field">
+<label asp-for="Filtro.Desde">
+</label>
+<input asp-for="Filtro.Desde" type="date" />
+</div>
+<div class="field">
+<label asp-for="Filtro.Hasta">
+</label>
+<input asp-for="Filtro.Hasta" type="date" />
+</div>
+<div class="field">
+<label asp-for="Filtro.Metodo">
+</label>
+<select asp-for="Filtro.Metodo" asp-items="Html.GetEnumSelectList<MetodoPago>()">
+<option value="">Todos los métodos</option>
+</select>
+</div>
+<button type="submit">Consultar</button>
+</form>
+@if(ViewData.ModelState.IsValid){
+<div class="stats">
+<div class="stat">
+<p>Comprobantes</p>
+<strong>@Model.Filas.Count</strong>
+</div>
+<div class="stat">
+<p>Importe registrado</p>
+<strong>Bs @((Model.Aprobados + Model.Reembolsados).ToString("N2"))</strong>
+</div>
+<div class="stat">
+<p>Reembolsados</p>
+<strong>Bs @Model.Reembolsados.ToString("N2")</strong>
+</div>
+<div class="stat">
+<p>Ingresos vigentes</p>
+<strong>Bs @Model.Aprobados.ToString("N2")</strong>
+</div>
+</div>
+<p class="help">Se filtra por la fecha original del pago y se muestra su estado actual. El modelo no tiene fecha de reembolso; este informe no representa el flujo de caja por fecha de devolución.</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>FECHA</th>
+<th>REFERENCIA / CLIENTE</th>
+<th>MÉTODO</th>
+<th>ESTADO</th>
+<th class="numeric">MONTO</th>
+</tr>
+</thead>
+<tbody>@foreach(var (p, i) in Model.Filas.Select((p, i) => (p, i))){<tr class="@(Model.Paginacion.Contiene(i) ? null : "fuera-pagina")">
+<td>@p.FechaPago.ToString("dd/MM/yyyy HH:mm")</td>
+<td>@p.CodigoTransaccion<small>@p.Reserva.Usuario.Nombre</small>
+</td>
+<td>@p.MetodoPago</td>
+<td>@p.Estado</td>
+<td class="numeric">Bs @p.Monto.ToString("N2")</td>
+</tr>}@if(Model.Filas.Count == 0){<tr>
+<td colspan="5" class="empty">No se encontraron pagos para este período.</td>
+</tr>}</tbody>
+</table>
+</div>
+<partial name="_Paginacion" model="Model.Paginacion" />
+<div class="section-head">
+<h2>Resumen por método</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>MÉTODO</th>
+<th>CANTIDAD</th>
+<th class="numeric">INGRESOS VIGENTES</th>
+<th class="numeric">REEMBOLSADOS</th>
+</tr>
+</thead>
+<tbody>@foreach(var grupo in Model.Filas.GroupBy(p => p.MetodoPago).OrderBy(g => g.Key)){<tr>
+<td>@grupo.Key</td>
+<td>@grupo.Count()</td>
+<td class="numeric">Bs @grupo.Where(p => p.Estado == EstadoPago.Aprobado).Sum(p => p.Monto).ToString("N2")</td>
+<td class="numeric">Bs @grupo.Where(p => p.Estado == EstadoPago.Reembolsado).Sum(p => p.Monto).ToString("N2")</td>
+</tr>}</tbody>
+</table>
+</div>
+}

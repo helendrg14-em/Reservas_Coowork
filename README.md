@@ -1,54 +1,40 @@
+> Estado de esta rama: aporte de Jorge (pagos y reportes). Faltan las dependencias de los demás integrantes; consultar Docs/INTEGRACION_JORGE.md antes de ejecutar. Las instrucciones siguientes corresponden al proyecto integrado.
+
 # WorkHub
 
-Aplicación web para administrar reservas de espacios de coworking y equipamiento. El proyecto usa ASP.NET Core MVC y Entity Framework Core con SQL Server.
+Aplicación MVC para administrar espacios de coworking, equipamiento, reservas y pagos.
 
-## Equipo y módulos
+## Iniciar en Windows
 
-| Integrante | Módulo asignado |
-| --- | --- |
-| Helen | Usuarios: login, registro y autenticación |
-| Jorge | Pagos y reportes |
-| Dellien | Espacios: CRUD y filtros |
-| Miguel | Equipamiento y relación «incluye» |
-| Matías | Reservas |
+Requiere .NET SDK 10 y SQL Server Express LocalDB. Abra `Workhub.slnx` en Visual Studio o ejecute `INICIAR_WORKHUB.cmd`. También puede ejecutar `dotnet restore` y `dotnet run --launch-profile http` desde esta carpeta. Consulte la dirección que muestra la consola.
 
-Agreguen el usuario de GitHub de cada integrante cuando esté confirmado.
+La conexión local está en `appsettings.json`; las opciones del entorno local están en `appsettings.Development.json`. Se conserva el nombre `WorkHubDemoDb` por compatibilidad con la base existente. No elimine esa base para actualizar. Al iniciar se agregan, si faltan, las columnas opcionales de fotografías y comprobantes.
 
-## Requisitos
+## Acceso inicial
 
-- .NET SDK 10
-- SQL Server LocalDB para desarrollo local, o una instancia compatible de SQL Server
+| Cuenta | Correo | Contraseña inicial |
+|---|---|---|
+| Administrador | admin@workhub.local | Admin123! |
+| Cliente | cliente01@workhub.local | Cliente123! |
 
-## Ejecutar localmente
+Bogus carga datos iniciales una sola vez en la base local autorizada y en Development. Existen clientes del 01 al 18. Las credenciales iniciales del dominio local están bloqueadas fuera de Development. No cambie a Production con estas cuentas. El registro público no puede apropiarse del correo administrador configurado.
 
-1. Clona el repositorio.
-2. Verifica la cadena `ConnectionStrings:WorkHub` en `appsettings.json`. Para una instancia distinta de LocalDB, guarda la cadena local en `appsettings.Development.json` o en el secreto de usuario `ConnectionStrings:WorkHub`; no subas contraseñas ni credenciales.
-3. Desde la carpeta del proyecto, instala la herramienta de EF si aún no está disponible y crea la base de datos:
+## Funciones
 
-   ```powershell
-   dotnet tool install --global dotnet-ef
-   dotnet ef migrations add InitialCreate
-   dotnet ef database update
-   dotnet run
-   ```
+- Inicio con fotografías de espacios y acceso a reservar.
+- Códigos automáticos para espacios y equipamiento, fotografías propias y paginación.
+- Reservas con disponibilidad, equipamiento, cálculo de costos y estados.
+- Pagos pendientes, reservas vencidas, registro de pagos y comprobantes privados.
+- Reportes de ingresos y reservas con filtros, totales e impresión.
 
-4. Abre la URL local indicada por `dotnet run`.
+La confirmación del cliente es simulada: registra el pago dentro del sistema y no procesa cobros bancarios. Subir un comprobante no verifica una operación bancaria. El administrador puede registrar y reembolsar pagos dentro del sistema.
 
-La primera migración debe generarse una sola vez y subirse al repositorio. Después, los integrantes actualizan la base con `dotnet ef database update` cuando reciban cambios de modelo.
+Las fotografías cargadas se guardan en `wwwroot/uploads/espacios`; los comprobantes privados en `App_Data/comprobantes`. Incluya ambas carpetas y la base SQL en sus copias de respaldo. El ZIP de código no incluye datos ni archivos personales cargados.
 
-## Modelo y DER
+## Integración del equipo
 
-El contexto configura las entidades `Usuario`, `Reserva`, `Espacio`, `Pago` y `Equipamiento`, además de la entidad asociativa `ReservaEquipamiento` para la relación N:M «incluye». Esta entidad conserva cantidad, fecha y precio por hora del equipo al momento de reservar.
+Los cinco TXT entregados contienen 26 bloques con archivos completos y mensajes de commit. Helen trabaja cuentas y estructura; Dellien, espacios; Miguel, equipamiento y costos; Matias, reservas; Jorge, pagos, reportes y documentación.
 
-El modelo implementa las cardinalidades del DER: usuario y espacio tienen muchas reservas; cada reserva puede tener un pago; y una reserva puede incluir varios equipos. Se agregaron folio de reserva y códigos de espacio/equipo como atributos prácticos para identificación. La contraseña se almacena como hash.
+Cada bloque propone unos 15 minutos de trabajo, sin forzar tiempos. Confirme únicamente cambios reales revisados. Si el repositorio ya contiene el mismo código, no cree commits vacíos ni altere fechas para aparentar actividad. Consulte `Docs/PLAN_COMMITS.md`.
 
-## Estado inicial
-
-La solución contiene el arranque MVC, modelos, contexto de datos, servicios compartidos y vistas de entrada para que cada integrante implemente su módulo. Los CRUD, la autenticación completa, los pagos y los dos reportes requeridos aún deben desarrollarse. Los reportes acordados son:
-
-- Reservas por período y estado, con filtros por fecha y resumen de cantidades.
-- Ingresos por período y método de pago, con filtros por fecha y total recaudado.
-
-## Trabajo en GitHub
-
-Trabajen en ramas por módulo y creen commits con cambios reales y mensajes descriptivos. Antes de integrar una rama, actualicen desde `main` y resuelvan los conflictos conservando el modelo compartido del DER.
+Documentación: `Docs/GUIA_USO.md`, `Docs/COMPARACION_DER.md`, `Docs/DER_implementado.mmd`, `Docs/FOTOGRAFIAS.md` y `Docs/REVISION.md`.

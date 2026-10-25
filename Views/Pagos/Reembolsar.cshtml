@@ -1,0 +1,13 @@
+@model Pago
+@{ ViewData["Title"] = "Registrar reembolso"; }
+<div class="panel form-card">
+<h1>Registrar reembolso</h1>
+<p>Comprobante <strong>@Model.CodigoTransaccion</strong> por <strong>Bs @Model.Monto.ToString("N2")</strong>.</p>
+<p>Confirma únicamente después de devolver el dinero por el medio correspondiente. Se marcará el pago como reembolsado y se cancelará la reserva @Model.Reserva.Folio.</p>
+<form method="post" asp-action="Reembolsar" asp-route-id="@Model.IdPago">
+<div class="form-actions">
+<button class="danger" type="submit">Confirmar reembolso realizado</button>
+<a asp-action="Detalles" asp-route-id="@Model.IdPago" class="button ghost">Volver</a>
+</div>
+</form>
+</div>
