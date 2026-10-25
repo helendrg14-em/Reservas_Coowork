@@ -46,6 +46,7 @@ public class ApplicationContext : DbContext
             entity.Property(e => e.Tipo).HasColumnName("tipo").HasConversion<int>();
             entity.Property(e => e.Capacidad).HasColumnName("capacidad");
             entity.Property(e => e.PrecioHora).HasColumnName("precio_hora").HasPrecision(10, 2);
+            entity.Property(e => e.Foto).HasColumnName("foto").HasMaxLength(200);
 
             entity.HasIndex(e => e.Codigo).IsUnique();
         });
@@ -112,6 +113,7 @@ public class ApplicationContext : DbContext
             entity.Property(e => e.MetodoPago).HasColumnName("metodo_pago").HasConversion<int>();
             entity.Property(e => e.Estado).HasColumnName("estado").HasConversion<int>();
             entity.Property(e => e.FechaPago).HasColumnName("fecha_pago");
+            entity.Property(e => e.Comprobante).HasColumnName("comprobante").HasMaxLength(200);
 
             entity.HasIndex(e => e.CodigoTransaccion).IsUnique();
             entity.HasIndex(e => e.IdReserva).IsUnique();
