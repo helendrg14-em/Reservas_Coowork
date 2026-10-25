@@ -22,12 +22,13 @@ public class ReservaService : IReservaService
     {
         if (fechaFin <= fechaInicio) return false;
 
-        // Hay solapamiento si: (A.inicio < B.fin) && (A.fin > B.inicio)
-        // Solo contamos las reservas activas (no canceladas).
+        // dos reservas chocan si una empieza antes de que termine la otra y termina despues de que empieza la otra
+        // las pendientes que ya vencieron no bloquean el horario
         var query = _db.Reservas
             .AsNoTracking()
             .Where(r => r.IdEspacio == idEspacio
                         && r.Estado != EstadoReserva.Cancelada
+                        && (r.Estado != EstadoReserva.Pendiente || r.FechaInicio > RelojBolivia.Ahora)
                         && r.FechaInicio < fechaFin
                         && r.FechaFin > fechaInicio);
 
