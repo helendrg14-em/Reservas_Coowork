@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -39,21 +40,27 @@ public class EquipamientosController(ApplicationContext db, CodigoService codigo
     private async Task<IActionResult> Guardar(int id, EquipoForm model)
     {
         model.Id = id;
-        var e = id == 0 ? new Equipamiento() : await db.Equipamientos.FindAsync(id);
-        if (e is null) return NotFound();
-        // El código es correlativo y se asigna al crear; al editar se conserva.
-        model.Codigo = id == 0 ? await codigos.EquipoAsync() : e.Codigo;
         if (!ModelState.IsValid) return await Formulario(model);
-        e.Codigo = model.Codigo; e.Nombre = model.Nombre.Trim(); e.Tipo = model.Tipo.Trim();
-        e.PrecioHora = model.PrecioHora;
-        if (id == 0) db.Equipamientos.Add(e);
-        try { await db.SaveChangesAsync(); }
-        catch (DbUpdateException)
+        int? idIntento = null;
+        try
         {
-            ModelState.AddModelError("", "No se pudo guardar. Otro administrador registró un equipo al mismo tiempo; intente nuevamente.");
-            return await Formulario(model);
+            await Transacciones.Ejecutar(db, async () =>
+            {
+                await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.ReadCommitted);
+                await Transacciones.Bloquear(db,"WorkHub:Catalogos");
+                if (id == 0 && idIntento.HasValue && await db.Equipamientos.AnyAsync(e=>e.IdEquipo==idIntento)) return;
+                var e = id == 0 ? new Equipamiento() : await db.Equipamientos.FindAsync(id);
+                if (e is null) throw new OperacionException("El equipo ya no existe.");
+                e.Codigo = id == 0 ? await codigos.EquipoAsync() : e.Codigo;
+                e.Nombre=model.Nombre.Trim(); e.Tipo=model.Tipo.Trim(); e.PrecioHora=model.PrecioHora;
+                if (id == 0) db.Equipamientos.Add(e);
+                await db.SaveChangesAsync(); idIntento=e.IdEquipo; await tx.CommitAsync();
+            });
         }
-        TempData["Exito"] = $"Registro guardado correctamente con el código {e.Codigo}.";
+        catch (OperacionException ex) { ModelState.AddModelError("",ex.Message); return await Formulario(model); }
+        catch (Exception ex) when (ErroresBaseDatos.Es(ex))
+        { ModelState.AddModelError("", "No se pudo confirmar el guardado. Revise el catálogo antes de volver a intentar."); return await Formulario(model); }
+        TempData["Exito"] = "Equipo guardado correctamente.";
         return RedirectToAction(nameof(Index));
     }
     private async Task<IActionResult> Formulario(EquipoForm model)
@@ -88,4 +95,3 @@ public class EquipamientosController(ApplicationContext db, CodigoService codigo
         return RedirectToAction(nameof(Index));
     }
 }
-

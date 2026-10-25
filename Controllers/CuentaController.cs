@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using Workhub.Data;
 using Workhub.Models;
+using Workhub.Models.Enums;
 using Workhub.Services;
 using Workhub.ViewModels;
 
@@ -54,7 +55,7 @@ public class CuentaController(ApplicationContext db, IPasswordService passwords,
         db.Usuarios.Add(new Usuario
         {
             Nombre = model.Nombre.Trim(), Correo = model.Correo, Telefono = model.Telefono.Trim(),
-            PasswordHash = passwords.Hash(model.Password)
+            Rol = RolUsuario.Cliente, PasswordHash = passwords.Hash(model.Password)
         });
         try { await db.SaveChangesAsync(); }
         catch (DbUpdateException)
@@ -68,7 +69,7 @@ public class CuentaController(ApplicationContext db, IPasswordService passwords,
     public async Task<IActionResult> Index()
     {
         var u = await db.Usuarios.SingleAsync(u => u.IdUsuario == UsuarioId);
-        return View(new PerfilViewModel { Nombre = u.Nombre, Telefono = u.Telefono, Correo = u.Correo });
+        return View(new PerfilViewModel { Nombre = u.Nombre, Telefono = u.Telefono, Correo = u.Correo, Rol = u.Rol, TotalReservas = await db.Reservas.CountAsync(r => r.IdUsuario == u.IdUsuario) });
     }
     [HttpPost]
     public async Task<IActionResult> Index(PerfilViewModel model)
@@ -79,6 +80,25 @@ public class CuentaController(ApplicationContext db, IPasswordService passwords,
         u.Nombre = model.Nombre.Trim(); u.Telefono = model.Telefono.Trim();
         await db.SaveChangesAsync();
         TempData["Exito"] = "Perfil actualizado.";
+        return RedirectToAction(nameof(Index));
+    }
+    [HttpGet]
+    public IActionResult Perfil() => RedirectToAction(nameof(Index));
+    [HttpGet]
+    public IActionResult CambiarPassword() => View(new CambiarPasswordViewModel());
+    [HttpPost]
+    public async Task<IActionResult> CambiarPassword(CambiarPasswordViewModel model)
+    {
+        if (!ModelState.IsValid) return View(model);
+        var usuario = await db.Usuarios.SingleAsync(u => u.IdUsuario == UsuarioId);
+        if (!passwords.Verify(model.PasswordActual, usuario.PasswordHash))
+        {
+            ModelState.AddModelError(nameof(model.PasswordActual), "La contraseña actual no es correcta.");
+            return View(model);
+        }
+        usuario.PasswordHash = passwords.Hash(model.PasswordNueva);
+        await db.SaveChangesAsync();
+        TempData["Exito"] = "Tu contraseña fue actualizada.";
         return RedirectToAction(nameof(Index));
     }
     public IActionResult Eliminar() => View();

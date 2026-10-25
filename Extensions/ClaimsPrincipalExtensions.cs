@@ -16,5 +16,5 @@ public static class ClaimsPrincipalExtensions
     }
 
     public static bool EsAdmin(this ClaimsPrincipal usuario) =>
-        usuario.IsInRole(nameof(RolUsuario.Admin));
+        usuario.IsInRole("Administrador");
 }

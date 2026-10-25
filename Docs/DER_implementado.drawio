@@ -1,0 +1,170 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="app.diagrams.net" type="device">
+  <diagram id="workhub-der" name="DER implementado">
+    <mxGraphModel dx="1500" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" value="WorkHub — DER implementado" style="text;html=0;align=left;fontSize=28;fontStyle=1;fontColor=#173F35;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="25" width="1000" height="50" />
+        </mxCell>
+        <mxCell id="subtitle" value="6 tablas · PK: clave primaria · FK: clave foránea · UK: valor único" style="text;html=0;align=left;fontSize=14;fontColor=#52645D;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="80" width="1200" height="35" />
+        </mxCell>
+        <mxCell id="USUARIO" value="USUARIO" style="swimlane;html=0;startSize=42;horizontal=1;rounded=0;fillColor=#205547;swimlaneFillColor=#FFFFFF;fontColor=#FFFFFF;fontStyle=1;fontSize=18;strokeColor=#205547;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="160" width="350" height="246" />
+        </mxCell>
+        <mxCell id="USUARIO_id_usuario" value="id_usuario : int   [PK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="USUARIO">
+          <mxGeometry as="geometry" x="0" y="42" width="350" height="34" />
+        </mxCell>
+        <mxCell id="USUARIO_nombre" value="nombre : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="USUARIO">
+          <mxGeometry as="geometry" x="0" y="76" width="350" height="34" />
+        </mxCell>
+        <mxCell id="USUARIO_correo" value="correo : string   [UK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="USUARIO">
+          <mxGeometry as="geometry" x="0" y="110" width="350" height="34" />
+        </mxCell>
+        <mxCell id="USUARIO_telefono" value="telefono : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="USUARIO">
+          <mxGeometry as="geometry" x="0" y="144" width="350" height="34" />
+        </mxCell>
+        <mxCell id="USUARIO_password_hash" value="password_hash : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="USUARIO">
+          <mxGeometry as="geometry" x="0" y="178" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO" value="ESPACIO" style="swimlane;html=0;startSize=42;horizontal=1;rounded=0;fillColor=#205547;swimlaneFillColor=#FFFFFF;fontColor=#FFFFFF;fontStyle=1;fontSize=18;strokeColor=#205547;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1080" y="160" width="350" height="280" />
+        </mxCell>
+        <mxCell id="ESPACIO_id_espacio" value="id_espacio : int   [PK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="42" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO_codigo" value="codigo : string   [UK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="76" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO_nombre" value="nombre : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="110" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO_tipo" value="tipo : int" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="144" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO_foto" value="foto : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="178" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO_capacidad" value="capacidad : int" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="212" width="350" height="34" />
+        </mxCell>
+        <mxCell id="ESPACIO_precio_hora" value="precio_hora : decimal" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="ESPACIO">
+          <mxGeometry as="geometry" x="0" y="246" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA" value="RESERVA" style="swimlane;html=0;startSize=42;horizontal=1;rounded=0;fillColor=#205547;swimlaneFillColor=#FFFFFF;fontColor=#FFFFFF;fontStyle=1;fontSize=18;strokeColor=#205547;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="570" y="160" width="350" height="348" />
+        </mxCell>
+        <mxCell id="RESERVA_id_reserva" value="id_reserva : int   [PK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="42" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_folio" value="folio : string   [UK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="76" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_fecha_inicio" value="fecha_inicio : datetime" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="110" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_fecha_fin" value="fecha_fin : datetime" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="144" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_fecha_creacion" value="fecha_creacion : datetime" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="178" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_estado" value="estado : int" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="212" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_costo_total" value="costo_total : decimal" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="246" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_id_usuario" value="id_usuario : int   [FK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="280" width="350" height="34" />
+        </mxCell>
+        <mxCell id="RESERVA_id_espacio" value="id_espacio : int   [FK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="RESERVA">
+          <mxGeometry as="geometry" x="0" y="314" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO" value="PAGO" style="swimlane;html=0;startSize=42;horizontal=1;rounded=0;fillColor=#205547;swimlaneFillColor=#FFFFFF;fontColor=#FFFFFF;fontStyle=1;fontSize=18;strokeColor=#205547;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="650" width="350" height="314" />
+        </mxCell>
+        <mxCell id="PAGO_id_pago" value="id_pago : int   [PK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="42" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_comprobante" value="comprobante : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="76" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_codigo_transaccion" value="codigo_transaccion : string   [UK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="110" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_id_reserva" value="id_reserva : int   [FK,UK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="144" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_monto" value="monto : decimal" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="178" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_metodo_pago" value="metodo_pago : int" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="212" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_estado" value="estado : int" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="246" width="350" height="34" />
+        </mxCell>
+        <mxCell id="PAGO_fecha_pago" value="fecha_pago : datetime" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="PAGO">
+          <mxGeometry as="geometry" x="0" y="280" width="350" height="34" />
+        </mxCell>
+        <mxCell id="EQUIPAMIENTO" value="EQUIPAMIENTO" style="swimlane;html=0;startSize=42;horizontal=1;rounded=0;fillColor=#205547;swimlaneFillColor=#FFFFFF;fontColor=#FFFFFF;fontStyle=1;fontSize=18;strokeColor=#205547;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="1080" y="650" width="350" height="212" />
+        </mxCell>
+        <mxCell id="EQUIPAMIENTO_id_equipo" value="id_equipo : int   [PK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="EQUIPAMIENTO">
+          <mxGeometry as="geometry" x="0" y="42" width="350" height="34" />
+        </mxCell>
+        <mxCell id="EQUIPAMIENTO_codigo" value="codigo : string   [UK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="EQUIPAMIENTO">
+          <mxGeometry as="geometry" x="0" y="76" width="350" height="34" />
+        </mxCell>
+        <mxCell id="EQUIPAMIENTO_nombre" value="nombre : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="EQUIPAMIENTO">
+          <mxGeometry as="geometry" x="0" y="110" width="350" height="34" />
+        </mxCell>
+        <mxCell id="EQUIPAMIENTO_tipo" value="tipo : string" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="EQUIPAMIENTO">
+          <mxGeometry as="geometry" x="0" y="144" width="350" height="34" />
+        </mxCell>
+        <mxCell id="EQUIPAMIENTO_precio_hora" value="precio_hora : decimal" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="EQUIPAMIENTO">
+          <mxGeometry as="geometry" x="0" y="178" width="350" height="34" />
+        </mxCell>
+        <mxCell id="INCLUYE" value="INCLUYE" style="swimlane;html=0;startSize=42;horizontal=1;rounded=0;fillColor=#205547;swimlaneFillColor=#FFFFFF;fontColor=#FFFFFF;fontStyle=1;fontSize=18;strokeColor=#205547;collapsible=0;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="570" y="650" width="350" height="212" />
+        </mxCell>
+        <mxCell id="INCLUYE_id_reserva" value="id_reserva : int   [PK,FK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="INCLUYE">
+          <mxGeometry as="geometry" x="0" y="42" width="350" height="34" />
+        </mxCell>
+        <mxCell id="INCLUYE_id_equipo" value="id_equipo : int   [PK,FK]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="INCLUYE">
+          <mxGeometry as="geometry" x="0" y="76" width="350" height="34" />
+        </mxCell>
+        <mxCell id="INCLUYE_cantidad" value="cantidad : int" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="INCLUYE">
+          <mxGeometry as="geometry" x="0" y="110" width="350" height="34" />
+        </mxCell>
+        <mxCell id="INCLUYE_precio_hora" value="precio_hora : decimal" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="INCLUYE">
+          <mxGeometry as="geometry" x="0" y="144" width="350" height="34" />
+        </mxCell>
+        <mxCell id="INCLUYE_fecha_hora" value="fecha_hora : datetime" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#F0F5F2;strokeColor=none;" vertex="1" parent="INCLUYE">
+          <mxGeometry as="geometry" x="0" y="178" width="350" height="34" />
+        </mxCell>
+        <mxCell id="rel0" value="realiza · 1 a 0..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=2;strokeColor=#507769;fontSize=13;fontColor=#173F35;labelBackgroundColor=#FFFFFF;exitX=1;exitY=0.5;entryX=0;entryY=0.3;" edge="1" parent="1" source="USUARIO" target="RESERVA">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="rel1" value="recibe · 1 a 0..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=2;strokeColor=#507769;fontSize=13;fontColor=#173F35;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.5;entryX=1;entryY=0.3;" edge="1" parent="1" source="ESPACIO" target="RESERVA">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="rel2" value="tiene · 1 a 0..1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERone;startFill=0;endArrow=ERone;endFill=0;strokeWidth=2;strokeColor=#507769;fontSize=13;fontColor=#173F35;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.8;entryX=1;entryY=0.2;" edge="1" parent="1" source="RESERVA" target="PAGO">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="rel3" value="contiene · 1 a 0..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=2;strokeColor=#507769;fontSize=13;fontColor=#173F35;labelBackgroundColor=#FFFFFF;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="RESERVA" target="INCLUYE">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="rel4" value="participa · 1 a 0..N" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=0;startArrow=ERone;startFill=0;endArrow=ERmany;endFill=0;strokeWidth=2;strokeColor=#507769;fontSize=13;fontColor=#173F35;labelBackgroundColor=#FFFFFF;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="EQUIPAMIENTO" target="INCLUYE">
+          <mxGeometry as="geometry" relative="1" />
+        </mxCell>
+        <mxCell id="note" value="INCLUYE tiene PK compuesta (id_reserva, id_equipo).&#10;USUARIO.rol almacena 1=Admin o 2=Cliente. Los permisos se revalidan en cada solicitud; no hay una tabla adicional de roles." style="text;html=0;align=left;fontSize=13;fontColor=#52645D;" vertex="1" parent="1">
+          <mxGeometry as="geometry" x="60" y="1010" width="1400" height="55" />
+        </mxCell>
+      <mxCell id="USUARIO_rol" value="rol : int [1=Admin, 2=Cliente]" style="text;html=0;align=left;verticalAlign=middle;spacingLeft=12;fontSize=13;fontFamily=Consolas;fontColor=#173F35;fillColor=#FFFFFF;strokeColor=none;" vertex="1" parent="USUARIO"><mxGeometry as="geometry" x="0" y="212" width="350" height="34" /></mxCell></root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

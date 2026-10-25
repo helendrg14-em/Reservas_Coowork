@@ -17,6 +17,8 @@ builder.Services.AddScoped<IReservaService, ReservaService>();
 builder.Services.AddScoped<ICostoService, CostoService>();
 builder.Services.AddScoped<IFolioService, FolioService>();
 builder.Services.AddScoped<ReservaGestionService>();
+builder.Services.AddScoped<PagoService>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<CodigoService>();
 builder.Services.AddSingleton<ArchivoService>();
 builder.Services.AddScoped<SessionEvents>();

@@ -5,3 +5,5 @@ Se tomó como base WorkHub_Proyecto_Mejorado (1).zip y se conservaron sus mejora
 La compilación final y los bloques incrementales se comprueban antes de empaquetar. Los archivos auxiliares de revisión, bases temporales, registros, bin y obj no forman parte de la entrega. La base habitual del usuario no se modificó durante esta revisión.
 
 Se quitaron los avisos repetidos de demostración y las credenciales de la pantalla de ingreso. Se mantiene una aclaración breve al confirmar pagos porque no existe una pasarela bancaria real. Esta revisión no equivale a una certificación de producción.
+
+Revisión posterior de las ramas integradas: 179 comprobaciones satisfactorias. Véase INTEGRACION_DEVELOP.md para los conflictos resueltos y la migración del rol persistido.

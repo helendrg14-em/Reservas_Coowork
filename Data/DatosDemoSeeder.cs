@@ -46,6 +46,7 @@ public static class DatosDemoSeeder
         try
         {
             await db.Database.EnsureCreatedAsync(ct);
+            await EsquemaWorkHub.ActualizarAsync(services, ct);
             await using var tx = await db.Database.BeginTransactionAsync(IsolationLevel.Serializable, ct);
             // Una sola carga inicial. No rellena automáticamente registros que alguien eliminó.
             if (await db.Usuarios.AnyAsync(ct) || await db.Espacios.AnyAsync(ct) || await db.Equipamientos.AnyAsync(ct))
@@ -57,7 +58,7 @@ public static class DatosDemoSeeder
             var admin = new Usuario
             {
                 Nombre = "Administrador WorkHub", Correo = CredencialesDemo.CorreoAdmin,
-                Telefono = "70000000", PasswordHash = passwords.Hash(CredencialesDemo.PasswordAdmin)
+                Rol = RolUsuario.Admin, Telefono = "70000000", PasswordHash = passwords.Hash(CredencialesDemo.PasswordAdmin)
             };
             var clientes = new UsuarioFaker().Generate(18);
             for (var i = 0; i < clientes.Count; i++)

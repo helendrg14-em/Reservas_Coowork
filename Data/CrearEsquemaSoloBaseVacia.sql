@@ -1,4 +1,4 @@
-﻿-- SOLO para una base VACÍA seleccionada explícitamente en SSMS.
+-- SOLO para una base VACÍA seleccionada explícitamente en SSMS.
 -- No ejecutar sobre la base de datos existente del equipo.
 -- No contiene DROP, ALTER, datos de usuarios ni contraseñas.
 SET XACT_ABORT ON;
@@ -24,6 +24,7 @@ CREATE TABLE [ESPACIO] (
     [tipo] int NOT NULL,
     [capacidad] int NOT NULL,
     [precio_hora] decimal(10,2) NOT NULL,
+    [foto] nvarchar(200) NULL,
     CONSTRAINT [PK_ESPACIO] PRIMARY KEY ([id_espacio])
 );
 
@@ -33,6 +34,7 @@ CREATE TABLE [USUARIO] (
     [correo] nvarchar(150) NOT NULL,
     [telefono] nvarchar(20) NOT NULL,
     [password_hash] nvarchar(max) NOT NULL,
+    [rol] int NOT NULL DEFAULT(2),
     CONSTRAINT [PK_USUARIO] PRIMARY KEY ([id_usuario])
 );
 
@@ -70,6 +72,7 @@ CREATE TABLE [PAGO] (
     [metodo_pago] int NOT NULL,
     [estado] int NOT NULL,
     [fecha_pago] datetime2 NOT NULL,
+    [comprobante] nvarchar(200) NULL,
     CONSTRAINT [PK_PAGO] PRIMARY KEY ([id_pago]),
     CONSTRAINT [FK_PAGO_RESERVA_id_reserva] FOREIGN KEY ([id_reserva]) REFERENCES [RESERVA] ([id_reserva]) ON DELETE CASCADE
 );

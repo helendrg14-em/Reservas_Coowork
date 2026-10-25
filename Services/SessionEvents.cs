@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using Workhub.Data;
+using Workhub.Models.Enums;
 
 namespace Workhub.Services;
 
@@ -20,21 +21,19 @@ public class SessionEvents(ApplicationContext db, IConfiguration configuration, 
             await context.HttpContext.SignOutAsync();
             return;
         }
-        // La lista administrativa se revalida: quitar un correo revoca su acceso.
+        // Se relee el rol persistido para aplicar cambios de permisos en la siguiente solicitud.
         var principal = CrearPrincipal(usuario, configuration);
         context.ReplacePrincipal(principal);
     }
 
     public static ClaimsPrincipal CrearPrincipal(Models.Usuario usuario, IConfiguration configuration)
     {
-        var admins = configuration.GetSection("Administracion:Correos").Get<string[]>() ?? [];
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, usuario.IdUsuario.ToString()),
             new(ClaimTypes.Name, usuario.Nombre), new(ClaimTypes.Email, usuario.Correo)
         };
-        if (admins.Contains(usuario.Correo, StringComparer.OrdinalIgnoreCase))
-            claims.Add(new(ClaimTypes.Role, "Administrador"));
+        claims.Add(new(ClaimTypes.Role, usuario.Rol == RolUsuario.Admin ? "Administrador" : "Cliente"));
         return new ClaimsPrincipal(new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
     }
 }

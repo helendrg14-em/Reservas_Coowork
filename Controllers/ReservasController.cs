@@ -10,7 +10,7 @@ using Workhub.Services;
 using Workhub.ViewModels;
 
 namespace Workhub.Controllers;
-public class ReservasController(ApplicationContext db, ReservaGestionService gestion, IConfiguration configuration) : Controller
+public class ReservasController(ApplicationContext db, ReservaGestionService gestion) : Controller
 {
     private int UsuarioId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
     private bool Admin => User.IsInRole("Administrador");
@@ -73,9 +73,8 @@ public class ReservasController(ApplicationContext db, ReservaGestionService ges
     {
         model.Espacios = await db.Espacios.AsNoTracking().OrderBy(e => e.Nombre)
             .Select(e => new SelectListItem(e.Nombre + " · " + e.Capacidad + " personas · Bs " + e.PrecioHora + "/h", e.IdEspacio.ToString())).ToListAsync();
-        var administradores = configuration.GetSection("Administracion:Correos").Get<string[]>() ?? [];
         if (Admin) model.Usuarios = await db.Usuarios.AsNoTracking()
-            .Where(u => !administradores.Contains(u.Correo)).OrderBy(u => u.Nombre)
+            .Where(u => u.Rol == RolUsuario.Cliente).OrderBy(u => u.Nombre)
             .Select(u => new SelectListItem(u.Nombre + " — " + u.Correo, u.IdUsuario.ToString())).ToListAsync();
         var equipos = await db.Equipamientos.AsNoTracking().OrderBy(e => e.Nombre).ToListAsync();
         model.Equipos = equipos.Select(e => new EquipoReservaForm { IdEquipo = e.IdEquipo, Nombre = e.Nombre,
