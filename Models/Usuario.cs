@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Workhub.Models.Enums;
 
 namespace Workhub.Models;
 
@@ -20,11 +21,17 @@ public class Usuario
     [Required(ErrorMessage = "El teléfono es obligatorio.")]
     [Phone(ErrorMessage = "Ingrese un teléfono válido.")]
     [StringLength(20)]
+    [Display(Name = "Teléfono")]
     public string Telefono { get; set; } = string.Empty;
 
-    // Hash ASP.NET Core Identity (PBKDF2); nunca se almacena la contraseña en texto plano.
+    // Hash generado con PasswordHasher de ASP.NET Core; nunca se almacena la contraseña en texto plano.
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
+
+    // Atributo agregado al DER: distingue al personal que administra el sistema de los clientes.
+    [Required]
+    [Display(Name = "Rol")]
+    public RolUsuario Rol { get; set; } = RolUsuario.Cliente;
 
     public List<Reserva> Reservas { get; set; } = new();
 }

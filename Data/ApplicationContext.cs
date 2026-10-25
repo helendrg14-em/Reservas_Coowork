@@ -31,6 +31,7 @@ public class ApplicationContext : DbContext
             entity.Property(e => e.Correo).HasColumnName("correo").HasMaxLength(150).IsRequired();
             entity.Property(e => e.Telefono).HasColumnName("telefono").HasMaxLength(20).IsRequired();
             entity.Property(e => e.PasswordHash).HasColumnName("password_hash").IsRequired();
+            entity.Property(e => e.Rol).HasColumnName("rol").HasConversion<int>();
 
             entity.HasIndex(e => e.Correo).IsUnique();
         });

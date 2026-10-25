@@ -19,7 +19,8 @@ public static class SeedData
                 Nombre = "Administrador WorkHub",
                 Correo = "admin@workhub.local",
                 Telefono = "70000000",
-                PasswordHash = passwords.Hash("Admin123*")
+                PasswordHash = passwords.Hash("Admin123*"),
+                Rol = RolUsuario.Admin
             });
         }
 
