@@ -1,6 +1,22 @@
-@{
-    ViewData["Title"] = "Reportes";
-}
+@{ ViewData["Title"] = "Reportes"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">INFORMACIÓN PARA DECIDIR</p>
 <h1>Reportes</h1>
-<p>Base para desarrollar dos informes útiles, con datos, filtros y resúmenes.</p>
-<p class="text-muted">Responsable: Jorge</p>
+<p>Consulta actividad e ingresos con información de tus registros.</p>
+</div>
+</div>
+<div class="cards">
+<article class="report-card">
+<span class="report-number">REPORTE 01</span>
+<h2>Reservas por período</h2>
+<p>Revisa la actividad según fecha de inicio y estado. Compara cantidades y el importe de reservas no canceladas.</p>
+<a asp-action="Reservas" class="button">Consultar reservas →</a>
+</article>
+<article class="report-card">
+<span class="report-number">REPORTE 02</span>
+<h2>Ingresos por período</h2>
+<p>Consulta los pagos registrados por fecha y método, con importes aprobados y reembolsados.</p>
+<a asp-action="Ingresos" class="button">Consultar ingresos →</a>
+</article>
+</div>

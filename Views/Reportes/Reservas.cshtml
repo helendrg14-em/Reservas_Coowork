@@ -1,0 +1,96 @@
+@model ReporteReservasVm
+@{ ViewData["Title"] = "Reservas por período"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">REPORTE 01</p>
+<h1>Reservas por período</h1>
+<p>Fecha de inicio: @Model.Filtro.Desde.ToString("dd/MM/yyyy") – @Model.Filtro.Hasta.ToString("dd/MM/yyyy") · @(Model.Filtro.Estado?.ToString() ?? "Todos los estados")</p>
+</div>
+<button type="button" class="print-button" data-print>Imprimir reporte</button>
+</div>
+<div asp-validation-summary="All">
+</div>
+<form method="get" class="filters">
+<div class="field">
+<label asp-for="Filtro.Desde">
+</label>
+<input asp-for="Filtro.Desde" type="date" />
+</div>
+<div class="field">
+<label asp-for="Filtro.Hasta">
+</label>
+<input asp-for="Filtro.Hasta" type="date" />
+</div>
+<div class="field">
+<label asp-for="Filtro.Estado">
+</label>
+<select asp-for="Filtro.Estado" asp-items="Html.GetEnumSelectList<EstadoReserva>()">
+<option value="">Todos los estados</option>
+</select>
+</div>
+<button type="submit">Consultar</button>
+</form>
+@if(ViewData.ModelState.IsValid){
+<div class="stats">
+<div class="stat">
+<p>Total de reservas</p>
+<strong>@Model.Filas.Count</strong>
+</div>
+<div class="stat">
+<p>Confirmadas</p>
+<strong>@Model.Filas.Count(r => r.Estado == EstadoReserva.Confirmada)</strong>
+</div>
+<div class="stat">
+<p>Canceladas</p>
+<strong>@Model.Filas.Count(r => r.Estado == EstadoReserva.Cancelada)</strong>
+</div>
+<div class="stat">
+<p>Importe no cancelado</p>
+<strong>Bs @Model.Importe.ToString("N2")</strong>
+<small>No equivale a dinero cobrado</small>
+</div>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>FECHA DE INICIO</th>
+<th>FOLIO / CLIENTE</th>
+<th>ESPACIO</th>
+<th>ESTADO</th>
+<th class="numeric">IMPORTE</th>
+</tr>
+</thead>
+<tbody>@foreach(var (r, i) in Model.Filas.Select((r, i) => (r, i))){<tr class="@(Model.Paginacion.Contiene(i) ? null : "fuera-pagina")">
+<td>@r.FechaInicio.ToString("dd/MM/yyyy HH:mm")</td>
+<td>@r.Folio<small>@r.Usuario.Nombre</small>
+</td>
+<td>@r.Espacio.Nombre</td>
+<td>@r.Estado</td>
+<td class="numeric">Bs @r.CostoTotal.ToString("N2")</td>
+</tr>}@if(Model.Filas.Count == 0){<tr>
+<td colspan="5" class="empty">No se encontraron reservas para este período.</td>
+</tr>}</tbody>
+</table>
+</div>
+<partial name="_Paginacion" model="Model.Paginacion" />
+<div class="section-head">
+<h2>Resumen por estado</h2>
+</div>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>ESTADO</th>
+<th>CANTIDAD</th>
+<th class="numeric">IMPORTE REGISTRADO</th>
+</tr>
+</thead>
+<tbody>@foreach(var grupo in Model.Filas.GroupBy(r => r.Estado).OrderBy(g => g.Key)){<tr>
+<td>@grupo.Key</td>
+<td>@grupo.Count()</td>
+<td class="numeric">Bs @grupo.Sum(r => r.CostoTotal).ToString("N2")</td>
+</tr>}</tbody>
+</table>
+</div>
+}
