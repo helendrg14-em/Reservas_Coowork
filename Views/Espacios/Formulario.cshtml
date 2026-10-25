@@ -1,0 +1,72 @@
+@model EspacioForm
+@{ ViewData["Title"] = Model.Id == 0 ? "Nuevo registro" : "Editar registro"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">ESPACIOS</p>
+<h1>@ViewData["Title"]</h1>
+<p>Completa los datos del catálogo.</p>
+</div>
+</div>
+<form method="post" enctype="multipart/form-data" asp-action="@(Model.Id == 0 ? "Crear" : "Editar")" asp-route-id="@Model.Id" class="panel form-card">
+<div asp-validation-summary="All">
+</div>
+<div class="form-grid">
+<div class="field">
+<label asp-for="Tipo">
+</label>
+<select asp-for="Tipo" asp-items="Html.GetEnumSelectList<TipoEspacio>()" data-codigo-destino="Codigo">
+</select>
+<span asp-validation-for="Tipo">
+</span>
+</div>
+<div class="field">
+<label for="Codigo">Código (automático)</label>
+@* Sin name: el servidor asigna el código; este campo solo lo muestra. *@
+<input id="Codigo" value="@Model.Codigo" readonly
+       data-codigos='@Json.Serialize(Model.CodigosSugeridos.ToDictionary(c => ((int)c.Key).ToString(), c => c.Value))' />
+</div>
+<div class="field">
+<label asp-for="Nombre">
+</label>
+<input asp-for="Nombre" />
+<span asp-validation-for="Nombre">
+</span>
+</div>
+<div class="field">
+<label asp-for="Capacidad">
+</label>
+<input asp-for="Capacidad" />
+<span asp-validation-for="Capacidad">
+</span>
+</div>
+<div class="field">
+<label asp-for="PrecioHora">
+</label>
+<input asp-for="PrecioHora" type="number" step="0.01" min="0.01" max="999999.99" />
+<span asp-validation-for="PrecioHora">
+</span>
+</div>
+</div>
+<div class="field photo-field">
+<label asp-for="Archivo">
+</label>
+<div class="photo-upload">
+<img src="@(Model.FotoActual ?? Presentacion.Foto(new Espacio { Tipo = Model.Tipo }))" alt="Vista previa de la fotografía" data-foto-preview />
+<div>
+<input asp-for="Archivo" type="file" accept="image/jpeg,image/png,image/webp" data-foto-input />
+<p class="help">JPG, PNG o WEBP de hasta 5 MB. Si no subes una, se muestra la fotografía referencial del tipo.</p>
+@if (Model.FotoActual is not null)
+{
+    <label class="check"><input asp-for="QuitarFoto" /> <span>Quitar la fotografía actual</span></label>
+}
+</div>
+</div>
+<span asp-validation-for="Archivo">
+</span>
+</div>
+<p class="help">El código se asigna según el tipo (ESC = escritorio, OFI = oficina, SAL = sala) y continúa la numeración. Actualizar la tarifa no modifica el total de reservas ya guardadas.</p>
+<div class="form-actions">
+<button type="submit">Guardar registro</button>
+<a asp-action="Index" class="button ghost">Volver</a>
+</div>
+</form>

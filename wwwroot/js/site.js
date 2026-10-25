@@ -1,4 +1,24 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+"use strict";
+document.querySelectorAll("[data-print]").forEach(button => button.addEventListener("click", () => window.print()));
+document.querySelectorAll("form[data-confirm]").forEach(form => {
+    form.addEventListener("submit", event => {
+        if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+    });
+});
 
-// Write your JavaScript code.
+// Muestra el código que se asignará según el tipo de espacio elegido.
+document.querySelectorAll("[data-codigo-destino]").forEach(select => {
+    const destino = document.getElementById(select.dataset.codigoDestino);
+    if (!destino?.dataset.codigos) return;
+    const codigos = JSON.parse(destino.dataset.codigos);
+    select.addEventListener("change", () => { if (codigos[select.value]) destino.value = codigos[select.value]; });
+});
+
+// Vista previa de la fotografía antes de guardar.
+document.querySelectorAll("[data-foto-input]").forEach(input => {
+    const preview = input.closest("form")?.querySelector("[data-foto-preview]");
+    input.addEventListener("change", () => {
+        const archivo = input.files?.[0];
+        if (preview && archivo && archivo.type.startsWith("image/")) preview.src = URL.createObjectURL(archivo);
+    });
+});

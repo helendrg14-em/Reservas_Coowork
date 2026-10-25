@@ -1,0 +1,5 @@
+@model Espacio
+@{ ViewData["Title"] = Model.Nombre; }
+<a asp-action="Index" class="back-link">← Volver a espacios</a>
+<div class="page-head"><div><p class="eyebrow">@Presentacion.Tipo(Model.Tipo)</p><h1>@Model.Nombre</h1><p>@Model.Capacidad @(Model.Capacidad == 1 ? "persona" : "personas") · @Model.Codigo</p></div></div>
+<div class="checkout-grid"><img class="detail-photo" src="@Presentacion.Foto(Model)" alt="Fotografía referencial del ambiente" /><aside class="panel summary-panel"><p class="eyebrow">TU PRÓXIMO ESPACIO</p><p class="big-price">Bs @Model.PrecioHora.ToString("N2") <small>/ hora</small></p><p>Elige el horario y los equipos adicionales en el siguiente paso.</p><a class="button full" asp-controller="Reservas" asp-action="Crear" asp-route-espacioId="@Model.IdEspacio">Reservar este espacio →</a><p class="help">El total se calcula según la duración y los equipos elegidos. Fotografía referencial.</p></aside></div>

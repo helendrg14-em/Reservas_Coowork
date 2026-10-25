@@ -1,0 +1,19 @@
+@model Espacio
+<article class="space-card">
+    <a class="space-photo" asp-controller="Espacios" asp-action="Detalles" asp-route-id="@Model.IdEspacio" aria-label="Ver @Model.Nombre">
+        <img src="@Presentacion.Foto(Model)" alt="Ambiente referencial de @Presentacion.Tipo(Model.Tipo)" loading="lazy" width="900" height="600" />
+        <span class="photo-tag">@Presentacion.Tipo(Model.Tipo)</span>
+    </a>
+    <div class="space-content">
+        <p class="space-meta">@Model.Capacidad @(Model.Capacidad == 1 ? "persona" : "personas") <span>·</span> @Model.Codigo</p>
+        <h3>@Model.Nombre</h3>
+        <div class="space-bottom">
+            <span class="price">Bs @Model.PrecioHora.ToString("N2") <small>/ hora</small></span>
+            <a class="button" asp-controller="Reservas" asp-action="Crear" asp-route-espacioId="@Model.IdEspacio">Reservar ↗</a>
+        </div>
+        @if (User.IsInRole("Administrador"))
+        {
+            <div class="card-admin"><a asp-controller="Espacios" asp-action="Editar" asp-route-id="@Model.IdEspacio">Editar espacio</a><a asp-controller="Espacios" asp-action="Eliminar" asp-route-id="@Model.IdEspacio">Eliminar</a></div>
+        }
+    </div>
+</article>

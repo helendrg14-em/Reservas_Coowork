@@ -1,0 +1,13 @@
+@model Espacio
+@{ ViewData["Title"] = "Eliminar registro"; }
+<div class="panel form-card">
+<h1>¿Eliminar @Model.Nombre?</h1>
+<p>Código: @Model.Codigo. Esta acción no se puede deshacer.</p>
+<p class="help">Si tiene reservas asociadas, se conservará para proteger el historial.</p>
+<form method="post" asp-action="Eliminar" asp-route-id="@Model.IdEspacio">
+<div class="form-actions">
+<button class="danger" type="submit">Eliminar registro</button>
+<a asp-action="Index" class="button ghost">Volver</a>
+</div>
+</form>
+</div>

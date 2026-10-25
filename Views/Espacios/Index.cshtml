@@ -1,6 +1,9 @@
-@{
-    ViewData["Title"] = "Espacios";
-}
-<h1>Espacios</h1>
-<p>Base del módulo de espacios: consulta, mantenimiento y filtros pendientes.</p>
-<p class="text-muted">Responsable: Dellien</p>
+@model List<Espacio>
+@{ ViewData["Title"] = "Espacios"; var paginacion = (Paginacion)ViewData["Paginacion"]!; }
+<div class="page-head"><div><p class="eyebrow">ELIGE DÓNDE TRABAJAR</p><h1>Espacios que inspiran.</h1><p>Encuentra el ambiente que se adapta a tu día, tu equipo y tus ideas.</p></div>@if (User.IsInRole("Administrador")) { <a class="button" asp-action="Crear">+ Nuevo espacio</a> }</div>
+<form method="get" class="filters"><div class="field"><label for="buscar">Buscar un espacio</label><input id="buscar" name="buscar" value="@ViewData["Buscar"]" placeholder="Nombre o código del espacio" /></div><button type="submit">Buscar</button><a asp-action="Index" class="button ghost">Limpiar</a></form>
+<div class="section-head"><p class="help">@paginacion.TotalRegistros espacios en el catálogo</p><span class="help">Tarifas por hora · Bs</span></div>
+<div class="space-grid">@foreach (var espacio in Model) { <partial name="_EspacioCard" model="espacio" /> }</div>
+@if (Model.Count == 0) { <div class="empty panel"><h2>No encontramos ese espacio.</h2><p>Prueba con otro nombre o limpia la búsqueda.</p></div> }
+<partial name="_Paginacion" model="paginacion" />
+<p class="help">Las fotografías sin imagen propia son referenciales del tipo de ambiente. Se comprueba la disponibilidad al elegir el horario.</p>
