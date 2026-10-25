@@ -1,0 +1,16 @@
+@model Espacio
+
+<article class="space-card">
+    <a class="space-photo" asp-controller="Espacios" asp-action="Index">
+        <img src="@Presentacion.Foto(Model)" alt="Espacio de trabajo: @Model.Nombre" loading="lazy" />
+        <span class="photo-tag">@Presentacion.Tipo(Model.Tipo)</span>
+    </a>
+    <div class="space-content">
+        <p class="space-meta">Capacidad para @Model.Capacidad personas</p>
+        <h3>@Model.Nombre</h3>
+        <div class="space-bottom">
+            <span class="price">@Model.PrecioHora.ToString("C0") <small>/ hora</small></span>
+            <a class="button ghost" asp-controller="Espacios" asp-action="Index">Ver espacios</a>
+        </div>
+    </div>
+</article>
