@@ -22,7 +22,7 @@ public class Usuario
     [StringLength(20)]
     public string Telefono { get; set; } = string.Empty;
 
-    // Hash BCrypt; nunca se almacena la contraseña en texto plano.
+    // Hash ASP.NET Core Identity (PBKDF2); nunca se almacena la contraseña en texto plano.
     [Required]
     public string PasswordHash { get; set; } = string.Empty;
 

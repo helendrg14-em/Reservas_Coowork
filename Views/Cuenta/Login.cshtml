@@ -1,0 +1,38 @@
+@model LoginViewModel
+@{ ViewData["Title"] = "Iniciar sesión"; }
+<section class="auth">
+<div class="auth-story">
+<span class="eyebrow">BIENVENIDO A WORKHUB</span>
+<h1>Tu espacio.<br />Tu ritmo.<br />Tu próximo proyecto.</h1>
+<p>Reserva espacios y encuentra todo lo que necesitas para trabajar mejor.</p>
+</div>
+<div class="auth-form">
+<h2>Iniciar sesión</h2>
+<p class="help">Ingresa para gestionar tus reservas.</p>
+<form method="post" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]">
+<div asp-validation-summary="All">
+</div>
+<div class="field">
+<label asp-for="Correo">
+</label>
+<input asp-for="Correo" autocomplete="username" />
+<span asp-validation-for="Correo">
+</span>
+</div>
+<div class="field">
+<label asp-for="Password">
+</label>
+<input asp-for="Password" autocomplete="current-password" />
+<span asp-validation-for="Password">
+</span>
+</div>
+<label class="check">
+<input asp-for="Recordarme" /> Mantener sesión iniciada</label>
+<div class="form-actions">
+<button type="submit">Entrar a WorkHub →</button>
+</div>
+</form>
+<p class="help">¿Primera vez aquí? <a asp-action="Registro">Crea tu cuenta</a>
+</p>
+</div>
+</section>

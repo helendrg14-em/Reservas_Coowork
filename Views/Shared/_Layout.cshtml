@@ -2,35 +2,60 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WorkHub</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@ViewData["Title"] · WorkHub</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/discovery.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3">
-            <div class="container">
-                <a class="navbar-brand fw-semibold" asp-controller="Home" asp-action="Index">WorkHub</a>
-                <div class="navbar-nav flex-row flex-wrap gap-3">
-                    <a class="nav-link" asp-controller="Espacios" asp-action="Index">Espacios</a>
-                    <a class="nav-link" asp-controller="Equipamientos" asp-action="Index">Equipamiento</a>
-                    <a class="nav-link" asp-controller="Reservas" asp-action="Index">Reservas</a>
-                    <a class="nav-link" asp-controller="Pagos" asp-action="Index">Pagos</a>
-                    <a class="nav-link" asp-controller="Reportes" asp-action="Index">Reportes</a>
-                    <a class="nav-link" asp-controller="Cuenta" asp-action="Index">Cuenta</a>
-                </div>
-            </div>
+<a class="skip-link" href="#contenido">Saltar al contenido</a>
+<header class="topbar">
+    <a class="brand" asp-controller="Home" asp-action="Index">
+<span class="brand-icon">w.</span> WorkHub<span class="brand-caption">COWORKING</span>
+</a>
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <div class="session">
+<span>@User.Identity.Name <small>@(User.IsInRole("Administrador") ? "Administración" : "Mi espacio de trabajo")</small>
+</span>
+        <form asp-controller="Cuenta" asp-action="Salir" method="post">
+<button class="button ghost" type="submit">Salir</button>
+</form>
+</div>
+    }
+</header>
+<div class="shell @(User.Identity?.IsAuthenticated == true ? "" : "public-shell")">
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <aside class="sidebar">
+        <p class="eyebrow">MI WORKHUB</p>
+        <nav aria-label="Navegación principal">
+        @foreach (var item in new[] { ("Home", "Inicio", "01"), ("Espacios", "Espacios", "02"), ("Equipamientos", "Equipamiento", "03"), ("Reservas", "Reservas", "04"), ("Pagos", "Pagos", "05"), ("Reportes", "Reportes", "06"), ("Cuenta", "Mi cuenta", "07") })
+        {
+            if (item.Item1 == "Reportes" && !User.IsInRole("Administrador")) { continue; }
+            var active = ViewContext.RouteData.Values["controller"]?.ToString() == item.Item1;
+            <a asp-controller="@item.Item1" asp-action="Index" class="@(active ? "active" : "")" aria-current="@(active ? "page" : null)">
+<span>@item.Item3</span>@item.Item2</a>
+        }
         </nav>
-    </header>
-    <main class="container py-3">
-        @RenderBody()
-    </main>
-    <footer class="border-top text-muted py-3 mt-4">
-        <div class="container">WorkHub · Gestión de espacios de trabajo</div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+        <div class="sidebar-note">
+<span class="status-dot">
+</span> Tu próximo gran proyecto<br />
+<strong>empieza aquí.</strong>
+<p>Espacios para conectar,<br />crear y avanzar.</p>
+</div>
+    </aside>
+}
+<main id="contenido" class="main-content">
+    @if (TempData["Exito"] is string exito) { <div class="alert success" role="status">@exito</div> }
+    @if (TempData["Error"] is string error) { <div class="alert error" role="alert">@error</div> }
+    @RenderBody()
+    <footer>WorkHub · Reservas de coworking <span>Horarios de Bolivia · Importes en Bs</span>
+</footer>
+</main>
+</div>
+<script src="~/js/site.js" asp-append-version="true">
+</script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

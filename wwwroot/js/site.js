@@ -1,4 +1,7 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+"use strict";
+document.querySelectorAll("[data-print]").forEach(button => button.addEventListener("click", () => window.print()));
+document.querySelectorAll("form[data-confirm]").forEach(form => {
+    form.addEventListener("submit", event => {
+        if (!window.confirm(form.dataset.confirm)) event.preventDefault();
+    });
+});
