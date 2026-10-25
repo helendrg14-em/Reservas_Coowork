@@ -1,0 +1,86 @@
+@model ReservaForm
+@{ ViewData["Title"] = Model.Id == 0 ? "Nueva reserva" : "Editar reserva"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">PLANIFICA TU VISITA</p>
+<h1>@ViewData["Title"]</h1>
+<p>Selecciona el espacio, el horario y los equipos que necesitas.</p>
+</div>
+</div>
+<form method="post" asp-action="@(Model.Id == 0 ? "Crear" : "Editar")" asp-route-id="@Model.Id" class="panel form-card">
+<div asp-validation-summary="All">
+</div>
+@if(User.IsInRole("Administrador")){<div class="field">
+<label asp-for="IdUsuario">
+</label>
+<input type="search" class="select-filter" placeholder="Buscar cliente por nombre o correo…" aria-label="Buscar cliente" data-filtrar-select="IdUsuario" autocomplete="off" />
+<select asp-for="IdUsuario" asp-items="Model.Usuarios">
+<option value="0">Selecciona un cliente</option>
+</select>
+</div>}
+<div class="field">
+<label asp-for="IdEspacio">
+</label>
+<select asp-for="IdEspacio" asp-items="Model.Espacios">
+<option value="0">Selecciona un espacio</option>
+</select>
+<span asp-validation-for="IdEspacio">
+</span>
+</div>
+<div class="form-grid">
+<div class="field">
+<label asp-for="FechaInicio">
+</label>
+<input asp-for="FechaInicio" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="FechaInicio">
+</span>
+</div>
+<div class="field">
+<label asp-for="FechaFin">
+</label>
+<input asp-for="FechaFin" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" />
+<span asp-validation-for="FechaFin">
+</span>
+</div>
+</div>
+<h2>Equipos adicionales</h2>
+<p class="help">Indica la cantidad. Deja 0 para no incluir el equipo. La reserva admite hasta 7 días.</p>
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>EQUIPO</th>
+<th>TARIFA / HORA</th>
+<th>CANTIDAD</th>
+</tr>
+</thead>
+<tbody>
+@for(var i = 0; i < Model.Equipos.Count; i++){<tr>
+<td>
+<input type="hidden" asp-for="Equipos[i].IdEquipo" />
+<label asp-for="Equipos[i].Cantidad">@Model.Equipos[i].Nombre</label>
+</td>
+<td>Bs @Model.Equipos[i].PrecioHora.ToString("N2")</td>
+<td>
+<input asp-for="Equipos[i].Cantidad" class="equipment-quantity" min="0" max="20" />
+<span asp-validation-for="Equipos[i].Cantidad">
+</span>
+</td>
+</tr>}
+@if(Model.Equipos.Count == 0){<tr>
+<td colspan="3" class="empty">No hay equipos en el catálogo.</td>
+</tr>}
+</tbody>
+</table>
+</div>
+<p class="intro-note">El total se calcula al guardar: horas × (tarifa del espacio + tarifas de los equipos × cantidades). La reserva queda pendiente hasta registrar su pago.</p>
+<div class="form-actions">
+@if (Model.Id == 0 && !User.IsInRole("Administrador"))
+{
+    <button type="submit" name="siguiente" value="pago">Reservar y pagar →</button>
+    <button type="submit" class="ghost" name="siguiente" value="despues">Reservar y pagar después</button>
+}
+else { <button type="submit">Guardar reserva</button> }
+<a asp-action="Index" class="button ghost">Volver</a>
+</div>
+</form>

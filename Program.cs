@@ -13,7 +13,12 @@ builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
 builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IReservaService, ReservaService>();
 builder.Services.AddScoped<ICostoService, CostoService>();
+builder.Services.AddScoped<IFolioService, FolioService>();
+builder.Services.AddScoped<ReservaGestionService>();
+builder.Services.AddScoped<CodigoService>();
+builder.Services.AddSingleton<ArchivoService>();
 builder.Services.AddScoped<SessionEvents>();
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
@@ -33,13 +38,24 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy("Administracion", policy => policy.RequireRole("Administrador"));
 });
 var app = builder.Build();
+try
+{
+    await DatosDemoSeeder.InicializarAsync(app.Services, app.Configuration, app.Environment);
+    await EsquemaWorkHub.ActualizarAsync(app.Services);
+}
+catch (Exception ex) when (ex is Microsoft.Data.SqlClient.SqlException or InvalidOperationException)
+{
+    app.Logger.LogCritical(ex, "No se pudo preparar WorkHub. Revise LocalDB y la conexión. " +
+        "En Windows puede iniciar la instancia con: sqllocaldb start MSSQLLocalDB. " +
+        "La demo usa WorkHubDemoDb; no borre su base existente.");
+    throw;
+}
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
     app.UseHttpsRedirection();
 }
-// Formularios HTML usan punto decimal; la interfaz muestra importes explícitos en Bs.
 var culture = (CultureInfo)CultureInfo.GetCultureInfo("es-BO").Clone();
 culture.NumberFormat.NumberDecimalSeparator = ".";
 culture.NumberFormat.NumberGroupSeparator = ",";
@@ -54,8 +70,5 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
-// La inicialización anterior solo se permite en Development y en la base demo designada.
-await EsquemaWorkHub.ActualizarAsync(app.Services);
-await DatosDemoSeeder.InicializarAsync(app.Services, builder.Configuration, app.Environment);
 app.Run();
 public partial class Program { }
