@@ -1,0 +1,42 @@
+@model Paginacion
+@{
+    // Conserva los filtros actuales de la URL y solo cambia el número de página.
+    string Url(int pagina)
+    {
+        var query = Context.Request.Query.Where(q => q.Key != Model.Parametro)
+            .Select(q => KeyValuePair.Create(q.Key, (string?)q.Value.ToString()))
+            .Append(KeyValuePair.Create(Model.Parametro, (string?)pagina.ToString()));
+        return Context.Request.Path + QueryString.Create(query).ToUriComponent()
+            + (Model.Ancla is null ? "" : "#" + Model.Ancla);
+    }
+    var desde = Math.Max(1, Model.Pagina - 2);
+    var hasta = Math.Min(Model.TotalPaginas, Model.Pagina + 2);
+}
+@if (Model.TotalPaginas > 1)
+{
+    <nav class="pagination" aria-label="Paginación">
+        @if (Model.Pagina > 1) { <a href="@Url(Model.Pagina - 1)" rel="prev">← Anterior</a> }
+        else { <span class="disabled">← Anterior</span> }
+        @if (desde > 1)
+        {
+            <a href="@Url(1)">1</a>
+            if (desde > 2) { <span class="gap">…</span> }
+        }
+        @for (var p = desde; p <= hasta; p++)
+        {
+            if (p == Model.Pagina) { <span class="current" aria-current="page">@p</span> }
+            else { <a href="@Url(p)">@p</a> }
+        }
+        @if (hasta < Model.TotalPaginas)
+        {
+            if (hasta < Model.TotalPaginas - 1) { <span class="gap">…</span> }
+            <a href="@Url(Model.TotalPaginas)">@Model.TotalPaginas</a>
+        }
+        @if (Model.Pagina < Model.TotalPaginas) { <a href="@Url(Model.Pagina + 1)" rel="next">Siguiente →</a> }
+        else { <span class="disabled">Siguiente →</span> }
+    </nav>
+}
+<p class="help pagination-info">
+    @if (Model.TotalRegistros == 0) { <text>Sin registros.</text> }
+    else { <text>Mostrando @(Model.Saltar + 1)–@Math.Min(Model.Saltar + Model.TamanoPagina, Model.TotalRegistros) de @Model.TotalRegistros · Página @Model.Pagina de @Model.TotalPaginas</text> }
+</p>

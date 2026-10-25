@@ -31,5 +31,9 @@ public class Espacio
     [Display(Name = "Precio por hora")]
     public decimal PrecioHora { get; set; }
 
+    // Ruta pública de la fotografía subida por el administrador (null = foto referencial del tipo).
+    [StringLength(200)]
+    public string? Foto { get; set; }
+
     public List<Reserva> Reservas { get; set; } = new();
 }

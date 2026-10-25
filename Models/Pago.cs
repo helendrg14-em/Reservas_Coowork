@@ -31,5 +31,9 @@ public class Pago
     [Display(Name = "Fecha y hora de transacción")]
     public DateTime FechaPago { get; set; } = DateTime.Now;
 
+    // Archivo del comprobante (captura del QR, foto o PDF), guardado fuera de wwwroot.
+    [StringLength(200)]
+    public string? Comprobante { get; set; }
+
     public Reserva Reserva { get; set; } = null!;
 }
