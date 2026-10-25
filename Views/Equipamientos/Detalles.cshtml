@@ -1,0 +1,25 @@
+@model Equipamiento
+@{ ViewData["Title"] = Model.Nombre; }
+<div class="page-head">
+<div>
+<p class="eyebrow">EQUIPAMIENTO</p>
+<h1>@Model.Nombre</h1>
+</div>
+<a class="button ghost" asp-action="Index">Volver al catálogo</a>
+</div>
+<div class="panel">
+<dl class="detail-grid">
+<div>
+<dt>Código</dt>
+<dd>@Model.Codigo</dd>
+</div>
+<div>
+<dt>Tipo</dt>
+<dd>@Model.Tipo</dd>
+</div>
+<div>
+<dt>Tarifa por hora</dt>
+<dd>Bs @Model.PrecioHora.ToString("N2")</dd>
+</div>
+</dl>
+</div>
