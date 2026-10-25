@@ -1,0 +1,13 @@
+@model Reserva
+@{ ViewData["Title"] = "Eliminar reserva"; }
+<div class="panel form-card">
+<h1>¿Eliminar esta reserva?</h1>
+<p>@Model.Folio · @Model.Espacio.Nombre · @Model.FechaInicio.ToString("dd/MM/yyyy HH:mm")</p>
+<p>Solo se eliminan reservas pendientes sin pagos. La acción no se puede deshacer.</p>
+<form method="post" asp-action="Eliminar" asp-route-id="@Model.IdReserva">
+<div class="form-actions">
+<button type="submit" class="danger">Eliminar reserva</button>
+<a asp-action="Detalles" asp-route-id="@Model.IdReserva" class="button ghost">Volver</a>
+</div>
+</form>
+</div>

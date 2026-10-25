@@ -1,6 +1,17 @@
-@{
-    ViewData["Title"] = "Reservas";
+@model List<Reserva>
+@{ ViewData["Title"] = "Reservas"; var admin = User.IsInRole("Administrador"); }
+<div class="page-head"><div><p class="eyebrow">TU AGENDA WORKHUB</p><h1>@(admin ? "Reservas" : "Mis reservas")</h1><p>Tus espacios, tus horarios y el siguiente paso de cada reserva.</p></div><a class="button" asp-action="Crear">+ Nueva reserva</a></div>
+<div class="tabs"><a asp-action="Index" class="@(ViewData["Estado"] is null && ViewData["Situacion"] is null ? "active" : "")">Todas</a><a asp-action="Index" asp-route-estado="1" class="@(ViewData["Estado"]?.ToString() == "Pendiente" ? "active" : "")">Por pagar</a><a asp-action="Index" asp-route-estado="2" class="@(ViewData["Estado"]?.ToString() == "Confirmada" ? "active" : "")">Confirmadas</a><a asp-action="Index" asp-route-situacion="vencidas" class="@(ViewData["Situacion"]?.ToString() == "vencidas" ? "active" : "")">Vencidas</a></div>
+<form method="get" class="filters"><div class="field"><label for="buscar">Buscar reserva</label><input id="buscar" name="buscar" value="@ViewData["Buscar"]" placeholder="Folio o nombre del espacio" /></div><div class="field"><label for="estado">Estado</label><select id="estado" name="estado"><option value="">Todos</option>@foreach(var e in Enum.GetValues<EstadoReserva>()){<option value="@((int)e)" selected="@(ViewData["Estado"]?.ToString() == e.ToString())">@e</option>}</select></div><button type="submit">Filtrar</button><a asp-action="Index" class="button ghost">Limpiar</a></form>
+<div class="booking-list">
+@foreach(var r in Model)
+{
+    var estado = Presentacion.Estado(r);
+    <article class="payment-card"><img src="@Presentacion.Foto(r.Espacio)" alt="" loading="lazy" /><div class="booking-info"><span class="badge @estado">@estado</span><h3>@r.Espacio.Nombre</h3><p>@r.FechaInicio.ToString("dd MMM yyyy · HH:mm") — @r.FechaFin.ToString("dd MMM · HH:mm")</p>@if(admin){<p>@r.Usuario.Nombre</p>}<small class="folio">@r.Folio</small></div><div class="booking-total"><strong>Bs @r.CostoTotal.ToString("N2")</strong>
+    @if(Presentacion.PuedePagar(r)) { @if(admin){<a class="button" asp-controller="Pagos" asp-action="Crear" asp-route-reservaId="@r.IdReserva">Registrar pago</a>}else{<a class="button" asp-controller="Pagos" asp-action="Pagar" asp-route-id="@r.IdReserva">Pagar ahora →</a>} }
+    else if(Presentacion.Vencida(r)){<a class="button ghost" asp-action="Editar" asp-route-id="@r.IdReserva">Reprogramar</a>}
+    <a class="nowrap" asp-action="Detalles" asp-route-id="@r.IdReserva">Ver reserva →</a></div></article>
 }
-<h1>Reservas</h1>
-<p>Base del flujo central de reservas, disponibilidad y cálculo de costos.</p>
-<p class="text-muted">Responsable: Matías</p>
+@if(Model.Count == 0){<div class="panel empty"><h2>No hay reservas en esta vista.</h2><p>Prueba otros filtros o encuentra un espacio para tu próximo día de trabajo.</p><a class="button" asp-controller="Espacios" asp-action="Index">Explorar espacios</a></div>}
+</div>
+<p class="help">@Model.Count reserva(s). Una pendiente se muestra como vencida cuando llega su hora de inicio; puedes reprogramarla o cancelarla.</p>
