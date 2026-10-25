@@ -1,69 +1,60 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Workhub.Data;
 using Workhub.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
-var connectionString = builder.Configuration.GetConnectionString("WorkHub");
-if (string.IsNullOrWhiteSpace(connectionString))
-{
-    throw new InvalidOperationException("Falta configurar la cadena de conexión 'WorkHub'.");
-}
-
-// Toda la aplicación exige sesión iniciada salvo las acciones marcadas con [AllowAnonymous].
+var connection = builder.Configuration.GetConnectionString("WorkHub")
+    ?? throw new InvalidOperationException("Configure ConnectionStrings:WorkHub.");
 builder.Services.AddControllersWithViews(options =>
-{
-    var politica = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
-    options.Filters.Add(new AuthorizeFilter(politica));
-});
-builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseSqlServer(connectionString));
-builder.Services
-    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+builder.Services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<CodigoService>();
+builder.Services.AddSingleton<ArchivoService>();
+builder.Services.AddScoped<SessionEvents>();
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Cuenta/Login";
-        options.LogoutPath = "/Cuenta/Logout";
         options.AccessDeniedPath = "/Cuenta/AccesoDenegado";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.SlidingExpiration = true;
+        options.Cookie.Name = "WorkHub.Demo.Session";
         options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+        options.ExpireTimeSpan = TimeSpan.FromHours(8);
+        options.EventsType = typeof(SessionEvents);
     });
-builder.Services.AddScoped<IPasswordService, PasswordService>();
-builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-builder.Services.AddScoped<IReservaService, ReservaService>();
-builder.Services.AddScoped<ICostoService, CostoService>();
-builder.Services.AddScoped<IFolioService, FolioService>();
-
-var app = builder.Build();
-
-// Carga los datos iniciales solo cuando la base ya fue creada con las migraciones.
-using (var scope = app.Services.CreateScope())
+builder.Services.AddAuthorization(options =>
 {
-    var db = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-    if (db.Database.GetAppliedMigrations().Any())
-    {
-        SeedData.Initialize(scope.ServiceProvider);
-    }
-}
-
+    options.FallbackPolicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+    options.AddPolicy("Administracion", policy => policy.RequireRole("Administrador"));
+});
+var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
+    app.UseHttpsRedirection();
 }
-
-app.UseHttpsRedirection();
+// Formularios HTML usan punto decimal; la interfaz muestra importes explícitos en Bs.
+var culture = (CultureInfo)CultureInfo.GetCultureInfo("es-BO").Clone();
+culture.NumberFormat.NumberDecimalSeparator = ".";
+culture.NumberFormat.NumberGroupSeparator = ",";
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new(culture, culture),
+    SupportedCultures = [culture], SupportedUICultures = [culture],
+    RequestCultureProviders = []
+});
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
-
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
+// La inicialización anterior solo se permite en Development y en la base demo designada.
 app.Run();
+public partial class Program { }
