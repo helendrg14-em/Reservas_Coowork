@@ -1,18 +1,36 @@
-@{
-    ViewData["Title"] = "Inicio";
+@model DashboardVm
+@{ ViewData["Title"] = "Inicio"; var admin = User.IsInRole("Administrador"); }
+@if (admin)
+{
+    <div class="page-head"><div><p class="eyebrow">ADMINISTRACIÓN</p><h1>Todo tu coworking, en orden.</h1><p>Gestiona los espacios, las reservas y los pagos de tu comunidad.</p></div><a class="button" asp-controller="Reservas" asp-action="Crear">+ Nueva reserva</a></div>
 }
-
-<section class="py-4">
-    <h1>WorkHub</h1>
-    <p class="lead">Sistema de reservas de espacios de trabajo y recursos tecnológicos.</p>
-    <p>Selecciona un módulo para comenzar. Cada sección tiene su responsable asignado y está preparada para incorporar sus operaciones.</p>
+else
+{
+    <section class="discovery-hero">
+        <img src="~/images/oficina.jpg" alt="Espacio de trabajo luminoso, fotografía referencial" fetchpriority="high" />
+        <div class="hero-shade"></div>
+        <div class="discovery-copy"><span class="hero-kicker">UN BUEN LUGAR PARA EMPEZAR</span><h1>Tu próximo gran proyecto<br />merece su espacio.</h1><p>Elige un escritorio, una oficina o una sala.<br />Reserva por horas, a tu ritmo.</p><a class="button light" href="#espacios">Encuentra tu espacio ↗</a></div>
+        <div class="hero-foot"><span>Espacios flexibles</span><span>Reserva por horas</span><span>Todo en un lugar</span></div>
+    </section>
+}
+<section class="stats">
+    <a class="stat" asp-controller="Espacios" asp-action="Index"><p>Espacios para elegir</p><strong>@Model.Espacios.ToString("00")</strong><small>Explora el catálogo ↗</small></a>
+    <a class="stat" asp-controller="Pagos" asp-action="Index"><p>Pendientes de pago</p><strong>@Model.Pendientes.ToString("00")</strong><small>Completa tu reserva ↗</small></a>
+    <a class="stat" asp-controller="Reservas" asp-action="Index" asp-route-estado="2"><p>Reservas confirmadas</p><strong>@Model.Confirmadas.ToString("00")</strong><small>Consulta tus horarios ↗</small></a>
+    <a class="stat" asp-controller="Reservas" asp-action="Index" asp-route-situacion="vencidas"><p>Reservas vencidas</p><strong>@Model.Vencidas.ToString("00")</strong><small>Reprograma si lo necesitas ↗</small></a>
 </section>
-
-<div class="row g-3">
-    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Cuenta" asp-action="Index"><h2 class="h5">Usuarios</h2><p class="mb-0">Helen · Login, registro y autenticación</p></a></div>
-    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Espacios" asp-action="Index"><h2 class="h5">Espacios</h2><p class="mb-0">Dellien · CRUD y filtros</p></a></div>
-    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Equipamientos" asp-action="Index"><h2 class="h5">Equipamiento</h2><p class="mb-0">Miguel · CRUD y relación «incluye»</p></a></div>
-    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Reservas" asp-action="Index"><h2 class="h5">Reservas</h2><p class="mb-0">Matías · Núcleo de reservas</p></a></div>
-    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Pagos" asp-action="Index"><h2 class="h5">Pagos</h2><p class="mb-0">Jorge · Pagos</p></a></div>
-    <div class="col-md-6 col-lg-4"><a class="card card-body h-100 text-decoration-none" asp-controller="Reportes" asp-action="Index"><h2 class="h5">Reportes</h2><p class="mb-0">Jorge · Informes del sistema</p></a></div>
+@if (!admin)
+{
+    <div class="section-head" id="espacios"><div><p class="eyebrow">ENCUENTRA EL TUYO</p><h2>Un espacio para cada idea.</h2></div><a asp-controller="Espacios" asp-action="Index">Ver todos los espacios →</a></div>
+    <div class="space-grid">@foreach (var espacio in Model.Destacados) { <partial name="_EspacioCard" model="espacio" /> }</div>
+    @if (Model.Destacados.Count == 0) { <div class="empty panel"><h3>Pronto habrá espacios disponibles</h3><p>La administración todavía no agregó espacios al catálogo.</p></div> }
+    <p class="help">Fotografías referenciales. La disponibilidad del horario se comprueba al reservar.</p>
+}
+<div class="section-head"><div><p class="eyebrow">TU AGENDA</p><h2>Próximas reservas</h2></div><a asp-controller="Reservas" asp-action="Index">Ver todas →</a></div>
+<div class="booking-list">
+@foreach (var r in Model.Proximas)
+{
+    <article class="mini-booking"><img src="@Presentacion.Foto(r.Espacio)" alt="" loading="lazy" /><div><h3>@r.Espacio.Nombre</h3><p>@r.FechaInicio.ToString("dd MMM yyyy · HH:mm") — @r.FechaFin.ToString("HH:mm")</p></div><span class="badge @r.Estado">@r.Estado</span><a asp-controller="Reservas" asp-action="Detalles" asp-route-id="@r.IdReserva">Ver reserva →</a></article>
+}
+@if (Model.Proximas.Count == 0) { <div class="panel empty"><h3>Tu agenda tiene espacio para algo nuevo.</h3><p>Elige un ambiente del catálogo para empezar.</p><a class="button ghost" asp-controller="Espacios" asp-action="Index">Explorar espacios</a></div> }
 </div>

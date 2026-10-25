@@ -1,10 +1,8 @@
 @model ErrorViewModel
-@{
-    ViewData["Title"] = "Error";
-}
-<h1 class="text-danger">Ocurrió un error</h1>
-<p>No se pudo completar la solicitud. Intenta nuevamente.</p>
-@if (Model.ShowRequestId)
-{
-    <p class="text-muted">Identificador: <code>@Model.RequestId</code></p>
-}
+@{ ViewData["Title"] = "No se pudo completar la solicitud"; }
+<div class="panel">
+<h1>No se pudo completar la solicitud</h1>
+<p>Intente nuevamente. Si el problema continúa, solicite al administrador que revise la conexión con SQL Server y los registros de la aplicación.</p>
+<p class="help">Referencia: @Model.RequestId</p>
+<a class="button" asp-controller="Home" asp-action="Index">Volver al inicio</a>
+</div>

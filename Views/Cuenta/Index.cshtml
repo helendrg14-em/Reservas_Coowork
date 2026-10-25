@@ -1,6 +1,42 @@
-@{
-    ViewData["Title"] = "Usuarios";
-}
-<h1>Usuarios</h1>
-<p>Base para registro, inicio de sesión y autenticación.</p>
-<p class="text-muted">Responsable: Helen</p>
+@model PerfilViewModel
+@{ ViewData["Title"] = "Mi cuenta"; }
+<div class="page-head">
+<div>
+<p class="eyebrow">PERFIL</p>
+<h1>Mi cuenta</h1>
+<p>Mantén tus datos de contacto actualizados.</p>
+</div>
+</div>
+<div class="panel form-card">
+<form method="post" asp-action="Index">
+<div asp-validation-summary="All">
+</div>
+<div class="field">
+<label asp-for="Correo">Correo electrónico</label>
+<input asp-for="Correo" readonly />
+<p class="help">El correo identifica la cuenta y no se modifica desde este formulario.</p>
+</div>
+<div class="form-grid">
+<div class="field">
+<label asp-for="Nombre">
+</label>
+<input asp-for="Nombre" />
+<span asp-validation-for="Nombre">
+</span>
+</div>
+<div class="field">
+<label asp-for="Telefono">
+</label>
+<input asp-for="Telefono" />
+<span asp-validation-for="Telefono">
+</span>
+</div>
+</div>
+<button type="submit">Guardar cambios</button>
+</form>
+<div class="danger-zone">
+<h2>Eliminar cuenta</h2>
+<p class="help">Solo se puede eliminar una cuenta sin reservas asociadas.</p>
+<a asp-action="Eliminar">Revisar eliminación</a>
+</div>
+</div>

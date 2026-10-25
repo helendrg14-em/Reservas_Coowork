@@ -1,0 +1,11 @@
+@{ ViewData["Title"] = "Eliminar cuenta"; }
+<div class="panel form-card">
+<h1>¿Eliminar tu cuenta?</h1>
+<p>Esta operación no puede deshacerse. Si tienes reservas, conservaremos la cuenta y el historial.</p>
+<form method="post" asp-action="Eliminar">
+<div class="form-actions">
+<button type="submit" class="danger">Eliminar mi cuenta</button>
+<a asp-action="Index" class="button ghost">Volver</a>
+</div>
+</form>
+</div>
