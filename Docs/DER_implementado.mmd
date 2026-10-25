@@ -1,0 +1,51 @@
+erDiagram
+    USUARIO ||--o{ RESERVA : realiza
+    ESPACIO ||--o{ RESERVA : recibe
+    RESERVA ||--o| PAGO : tiene
+    RESERVA ||--o{ INCLUYE : contiene
+    EQUIPAMIENTO ||--o{ INCLUYE : participa
+    USUARIO { int id_usuario PK
+        string nombre
+        string correo UK
+        string telefono
+        string password_hash
+    }
+    ESPACIO { int id_espacio PK
+        string codigo UK
+        string nombre
+        int tipo
+        string foto
+        int capacidad
+        decimal precio_hora
+    }
+    RESERVA { int id_reserva PK
+        string folio UK
+        datetime fecha_inicio
+        datetime fecha_fin
+        datetime fecha_creacion
+        int estado
+        decimal costo_total
+        int id_usuario FK
+        int id_espacio FK
+    }
+    PAGO { int id_pago PK
+        string comprobante
+        string codigo_transaccion UK
+        int id_reserva FK,UK
+        decimal monto
+        int metodo_pago
+        int estado
+        datetime fecha_pago
+    }
+    EQUIPAMIENTO { int id_equipo PK
+        string codigo UK
+        string nombre
+        string tipo
+        decimal precio_hora
+    }
+    INCLUYE { int id_reserva PK,FK
+        int id_equipo PK,FK
+        int cantidad
+        decimal precio_hora
+        datetime fecha_hora
+    }
